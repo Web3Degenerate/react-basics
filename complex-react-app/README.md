@@ -34,7 +34,11 @@
 
 ```
 
-6. Create file `webpack.config.js` and copy file in Lesson 14.
+6. Install Axios
+
+   - `npm i axios`
+
+7. Create file `webpack.config.js` and copy file in Lesson 14.
 
 ## VS Code Snippet
 
