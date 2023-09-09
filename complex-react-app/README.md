@@ -117,3 +117,5 @@ localStorage.setItem("complexappToken", response.data.token)
 localStorage.setItem("complexappUsername", response.data.username)
 localStorage.setItem("complexappAvatar", response.data.avatar)
 ```
+
+- Then check browser console => `Applciation` => `Local Storage`

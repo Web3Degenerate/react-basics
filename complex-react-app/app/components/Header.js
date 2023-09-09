@@ -6,7 +6,9 @@ import HeaderLoggedIn from './HeaderLoggedIn'
 function Header() {
 
 //Added state (4:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview
-  const [loggedIn, setLoggedIn] = useState(false)
+  // const [loggedIn, setLoggedIn] = useState(false)
+//Updated state (5:18): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18254880#overview
+  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("complexappToken")))
 
     return (
             <header className="header-bar bg-primary mb-3">
