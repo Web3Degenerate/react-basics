@@ -87,6 +87,8 @@ HeaderLoggedOut.js:13 {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2
 
    - Create HeaderLoggedIn.js component
 
+## Pass State from one Component to Another
+
 4. Pass state through Props for `setLoggedIn()` in `L33` and `L34`
    - Mostly in [(L34)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview) we pass in the `useState` setLoggedIn to true/false
 
@@ -119,3 +121,49 @@ localStorage.setItem("complexappAvatar", response.data.avatar)
 ```
 
 - Then check browser console => `Applciation` => `Local Storage`
+
+## Lifting the State Up
+
+6. In [(L36)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18264826#overview) around `4:45` we lift the state up.
+   - The loggedIn state lives in our `Header.js` component.
+   - Our `Main.js` (_like App.js_) has no way of accessing the (_child?_) loggedIn state created in our `Header.js` component.
+   - **Lifting the state up** - requires us to move the state (_loggedIn_) up to the **parent** component, _here_ the `Main.js` component.
+     - Then we can pass the state down from the parent to the child component.
+   - Just move the state `const [loggedIn, setLoggedIn] = useState(false)`
+   - Pass down to the `Header` component with props:
+
+```js
+// Main.js
+;<Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+
+//Then in Header.js
+function Header(props) {
+  {
+    props.loggedIn ? <HeaderLoggedIn setLoggedIn={props.setLoggedIn} /> : <HeaderLoggedOut setLoggedIn={props.setLoggedIn} />
+  }
+}
+```
+
+7. In Main.js (which holds loggedIn state now) dynamically set which component loads
+
+```js
+<Route path="/" element={loggedIn ? <Home /> : <HomeGuest />} />
+```
+
+- 7B - In the past, devs would use a third party state management library like **Redux**
+  - In the latest versions we now have tools like **Context** and **useReducer** which will solve the state problems in most cases.
+
+## Create Post
+
+8. Start [L37](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18268562#overview)
+   - x
+
+### Create Unique Base URL
+
+9. In [L37 at (9:35)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18268562#overview)
+   - In `Main.js` import axios and use `Axios.defaults.baseURL` to set the app's base URL
+
+```js
+import Axios from "axios"
+Axios.defaults.baseURL = "http://localhost:8080"
+```

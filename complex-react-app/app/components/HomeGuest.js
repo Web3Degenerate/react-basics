@@ -31,7 +31,10 @@ function HomeGuest() {
                 // Axios.post(URL SEND Request, ANY DATA SEND TO SERVER)
                 // await Axios.post("http://localhost:8080/register", {username: "Howard", email: "Howard@test.com", password: "qwerty123456" })
                 // await Axios.post("http://localhost:8080/register", {username: username, email: email, password: password })
-                await Axios.post("http://localhost:8080/register", {username, email, password })
+
+                //L37 (~10th min) set baseURL in Main.js
+                // await Axios.post("http://localhost:8080/register", {username, email, password })
+                await Axios.post("/register", {username, email, password })
 
                 console.log("User was successfully created in handleSubmit")
             } catch (error) {

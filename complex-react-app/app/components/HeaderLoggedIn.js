@@ -1,5 +1,7 @@
 import React, { useEffect } from "react"
 
+//Added Link in L37
+import {Link} from 'react-router-dom'
 
 //Added in: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview
 
@@ -34,9 +36,9 @@ function HeaderLoggedIn(props) {
 
             </a>
 
-            <a className="btn btn-sm btn-success mr-2" href="/create-post">
+            <Link className="btn btn-sm btn-success mr-2" to="/create-post">
             Create Post
-            </a>
+            </Link>
 
 {/* Arrow function set props.setLoggedIn() to false */}
             {/* <button onClick={() => props.setLoggedIn(false)} className="btn btn-sm btn-secondary"> */}

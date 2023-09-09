@@ -11,7 +11,10 @@ function HeaderLoggedOut(props) {
     async function handleSubmit(e) {
         e.preventDefault()
         try {
-            const response = await Axios.post('http://localhost:8080/login', {username, password})
+            //L37 (~10th min) set baseURL in Main.js
+            // const response = await Axios.post('http://localhost:8080/login', {username, password})
+            const response = await Axios.post('/login', {username, password})
+
             console.log(response.data)
 
             if (response.data) {

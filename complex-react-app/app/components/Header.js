@@ -3,12 +3,13 @@ import {Link} from 'react-router-dom'
 import HeaderLoggedOut from './HeaderLoggedOut'
 import HeaderLoggedIn from './HeaderLoggedIn'
 
-function Header() {
+function Header(props) {  //added props parameter in L36 (~7:00)
 
 //Added state (4:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview
   // const [loggedIn, setLoggedIn] = useState(false)
 //Updated state (5:18): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18254880#overview
-  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("complexappToken")))
+// Moved to Main.js (lifted state up) in L36 (5:20): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18264826#overview
+  // const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("complexappToken")))
 
     return (
             <header className="header-bar bg-primary mb-3">
@@ -22,7 +23,10 @@ function Header() {
 {/* Ternary operator added (5th min): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview */}
                 {/* <HeaderLoggedOut /> */}
                 {/* <HeaderLoggedIn /> */}
-                {loggedIn ? <HeaderLoggedIn setLoggedIn={setLoggedIn} /> : <HeaderLoggedOut setLoggedIn={setLoggedIn} />}
+
+{/* L36 (7:20) add props.loggedIn: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18264826#overview  */}
+                {/* {loggedIn ? <HeaderLoggedIn setLoggedIn={setLoggedIn} /> : <HeaderLoggedOut setLoggedIn={setLoggedIn} />} */}
+                {props.loggedIn ? <HeaderLoggedIn setLoggedIn={props.setLoggedIn} /> : <HeaderLoggedOut setLoggedIn={props.setLoggedIn} />}
 
 
 
