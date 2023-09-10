@@ -1,15 +1,22 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useContext } from "react"
 
 //Added Link in L37
 import {Link} from 'react-router-dom'
+
+//Added context in L40 (14:00)
+import ExampleContext from '../ExampleContext'
 
 //Added in: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview
 
 function HeaderLoggedIn(props) {
 
+    //de-structure property setLoggedIn from object {} ExampleContext in L40 (14:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391868#overview
+    const {setLoggedIn} = useContext(ExampleContext)
+
     function handleLogout() {
         //Added at (6:50): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18254880#overview
-        props.setLoggedIn(false)
+        // props.setLoggedIn(false)
+        setLoggedIn(false) //pull from useContext in L40
         //Remove token, username and avatar from localStorage
         localStorage.removeItem("complexappToken")
         localStorage.removeItem("complexappUsername")

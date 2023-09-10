@@ -26,7 +26,11 @@ function Header(props) {  //added props parameter in L36 (~7:00)
 
 {/* L36 (7:20) add props.loggedIn: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18264826#overview  */}
                 {/* {loggedIn ? <HeaderLoggedIn setLoggedIn={setLoggedIn} /> : <HeaderLoggedOut setLoggedIn={setLoggedIn} />} */}
-                {props.loggedIn ? <HeaderLoggedIn setLoggedIn={props.setLoggedIn} /> : <HeaderLoggedOut setLoggedIn={props.setLoggedIn} />}
+                {/* {props.loggedIn ? <HeaderLoggedIn setLoggedIn={props.setLoggedIn} /> : <HeaderLoggedOut setLoggedIn={props.setLoggedIn} />} */}
+
+                {/* L40 (13:21) Take out props.setLoggedIn manually passed in and useContext instead: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391868#overview */}
+               {/* then go into HeaderLoggedIn and HeaderLoggedOut and add useContext to both */}
+               {props.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
 
 
 

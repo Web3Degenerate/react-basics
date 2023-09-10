@@ -167,3 +167,19 @@ function Header(props) {
 import Axios from "axios"
 Axios.defaults.baseURL = "http://localhost:8080"
 ```
+
+## Flash Messages L39
+
+10. Create `FlashMessages.js` component and pull it into the `Main.js`
+
+-
+
+## Context
+
+11. L40
+
+## useReducer
+
+12. [L41](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391870#overview)
+
+- complex state logic that requires multiple values
