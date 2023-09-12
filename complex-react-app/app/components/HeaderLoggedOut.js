@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react"
 import Axios from 'axios';
 
 //Added context in L40 (14:00)
-import ExampleContext from '../ExampleContext'
+import DispatchContext from '../DispatchContext'
 
 //Built out: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18231522#overview
 
@@ -11,8 +11,12 @@ function HeaderLoggedOut(props) {
     const [username, setUsername] = useState()
     const [password, setPassword] = useState()
 
+    
     //de-structure property setLoggedIn from object {} ExampleContext in L40 (14:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391868#overview
-    const {setLoggedIn} = useContext(ExampleContext)
+    // const {setLoggedIn} = useContext(ExampleContext)
+    
+// L42 (10:51):  https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18405574#overview
+    const appDispatch = useContext(DispatchContext)
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -34,7 +38,12 @@ function HeaderLoggedOut(props) {
 
 // Added props.setLoggedIn(true) in L34 @7:42: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview
                 // props.setLoggedIn(true)
-                setLoggedIn(true) //pull from useContext in L40
+        // setLoggedIn(true) //pull from useContext in L40
+
+    // L42 (10:26) change setLoggedIn(false) to appDispatch({type: "logout"}): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18405574#overview
+            // setLoggedIn(false) //pull from useContext in L40
+                appDispatch({ type: "login" })
+
             } else {
                 console.log("Incorrect username / password")
             }

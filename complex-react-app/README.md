@@ -183,3 +183,14 @@ Axios.defaults.baseURL = "http://localhost:8080"
 12. [L41](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391870#overview)
 
 - complex state logic that requires multiple values
+
+## Immer Package (L43)
+
+14. [NPM Immer package here](https://npmjs.com/package/immer)
+
+- - Install with package for react `npm i immer use-immer`
+
+  - Not part of official core of react. But perfect fit into React.
+  - Problem solves: _In react, you need to return a new object. You can't directly modify or mutate the existing state object_
+  - **Immer** gives us a draft, essentially a carbon copy of state and then we are free to directly modify and mutate that draft.
+  -

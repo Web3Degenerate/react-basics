@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext } from "react"
 import Page from './Page'
 import Axios from "axios"
 
-import ExampleContext from "../ExampleContext"
+import DispatchContext from "../DispatchContext"
 
 import {useNavigate} from 'react-router-dom'
               //Add props L39 (11:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18268564#overview
@@ -18,7 +18,10 @@ function CreatePost(props) {
 //useContext added in L40 (7:35): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391868#overview
     // const addFlashMessage = useContext(ExampleContext)
     //L40 (12:40) - destructure the ExampleContext (from Main.js) object with multiple properties
-    const { addFlashMessage }= useContext(ExampleContext)
+    // const { addFlashMessage }= useContext(ExampleContext)
+//L42 (11:44): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18405574#overview    
+const appDispatch = useContext(DispatchContext)
+
 
     async function handleSubmit(e){
         e.preventDefault()
@@ -31,8 +34,11 @@ function CreatePost(props) {
                     //Add props L39 (11:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18268564#overview
                     // props.addFlashMessage("Success! your post has been saved.")
                     //Remove 'props.' from addFlashMessage now that we are using ExampleContext in L40 (9:25): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391868#overview
-                    addFlashMessage("Success! your post has been saved!")
-            navigate(`/post/${response.data}`)
+            // addFlashMessage("Success! your post has been saved!")
+//LL42 (12:30) replace addFlashMessage with appDispatch: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18405574#overview
+            appDispatch({type: "flashMessage", value: "Congrats, you created a new post." })
+            
+                    navigate(`/post/${response.data}`)
             // setTitle('')
             // setBody('')
         } catch(e) {

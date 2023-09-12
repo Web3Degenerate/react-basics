@@ -1,9 +1,14 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import {Link} from 'react-router-dom'
 import HeaderLoggedOut from './HeaderLoggedOut'
 import HeaderLoggedIn from './HeaderLoggedIn'
 
+import StateContext from '../StateContext'
+
+
 function Header(props) {  //added props parameter in L36 (~7:00)
+
+    const appState = useContext(StateContext)
 
 //Added state (4:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview
   // const [loggedIn, setLoggedIn] = useState(false)
@@ -30,7 +35,11 @@ function Header(props) {  //added props parameter in L36 (~7:00)
 
                 {/* L40 (13:21) Take out props.setLoggedIn manually passed in and useContext instead: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391868#overview */}
                {/* then go into HeaderLoggedIn and HeaderLoggedOut and add useContext to both */}
-               {props.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
+
+  {/* L42 use StateContext instead of props.loggedIn */}
+               {/* {props.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />} */}
+               {appState.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
+
 
 
 
