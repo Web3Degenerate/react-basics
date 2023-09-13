@@ -4,6 +4,8 @@ import Page from './Page'
 import Axios from "axios"
 
 import DispatchContext from "../DispatchContext"
+//Added L44 (13:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+import StateContext from "../StateContext"
 
 import {useNavigate} from 'react-router-dom'
               //Add props L39 (11:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18268564#overview
@@ -21,13 +23,17 @@ function CreatePost(props) {
     // const { addFlashMessage }= useContext(ExampleContext)
 //L42 (11:44): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18405574#overview    
 const appDispatch = useContext(DispatchContext)
+const appState = useContext(StateContext)
+
 
 
     async function handleSubmit(e){
         e.preventDefault()
         try {
                                             //name of title and body properties is the same as our value
-            const response = await Axios.post('/create-post', {title, body, token: localStorage.getItem("complexappToken")})
+// L44 (13:45) updated localStorage.getItem() with appStorage: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+            // const response = await Axios.post('/create-post', {title, body, token: localStorage.getItem("complexappToken")})
+            const response = await Axios.post('/create-post', {title, body, token: appState.user.token})
             console.log("New post was created from CreatePost.js handleSubmit")
             //Added redirect to new post URL in L38 (5:25): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18282394#overview
             // react-router is managing the browsers history for us. It offers us the useNavigate() function

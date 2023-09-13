@@ -1,4 +1,4 @@
-import React, {useState, useReducer } from 'react'
+import React, {useState, useReducer, useEffect} from 'react'
 import ReactDOM from 'react-dom/client'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
@@ -31,7 +31,14 @@ function Main(){
 // Added useReducer at L41 (1:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391870#overview
     const initialState = {
         loggedIn: Boolean(localStorage.getItem("complexappToken")), 
-        flashMessages: [] 
+        flashMessages: [],
+        //L44 useEffect: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+        //user object will now be available in our global or app-wide state:
+        user: {
+            token: localStorage.getItem("complexappToken"),
+            username: localStorage.getItem("complexappUsername"),
+            avatar: localStorage.getItem("complexappAvatar")
+        } 
     }
 
 // Call state draft b/c Immer in L43: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18418654#overview      
@@ -45,6 +52,8 @@ function Main(){
             //L43 - draft.loggedIn = true
                 // return {loggedIn: true, flashMessages: state.flashMessages} 
                 draft.loggedIn = true
+            //L44 - added draft.user = x (4:40): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+                draft.user = action.data
                 return //break
             case "logout":
             //L43 - draft.loggedIn = false
@@ -64,6 +73,22 @@ function Main(){
     // const [state, dispatch] = useReducer(ourReducer, initialState)
     const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 
+// L44 (6:10) useEffect() added: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+    // useEffect(function, list or array of dependency that you want to watch for changes.)
+    useEffect(() => {
+        if(state.loggedIn){
+            // localStorage.setItem("complexappToken", response.data.token)
+            // localStorage.setItem("complexappUsername", response.data.username)
+            // localStorage.setItem("complexappAvatar", response.data.avatar)
+                localStorage.setItem("complexappToken", state.user.token)
+                localStorage.setItem("complexappUsername", state.user.username)
+                localStorage.setItem("complexappAvatar", state.user.avatar)
+        }else{
+                localStorage.removeItem("complexappToken")
+                localStorage.removeItem("complexappUsername")
+                localStorage.removeItem("complexappAvatar") 
+        }
+    },[state.loggedIn])
 
         // dispatch({type: "login"})
         // dispatch({type: "logout"})

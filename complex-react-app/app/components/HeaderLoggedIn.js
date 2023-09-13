@@ -3,8 +3,11 @@ import React, { useEffect, useContext } from "react"
 //Added Link in L37
 import {Link} from 'react-router-dom'
 
-//Added context in L40 (14:00)
+//Added DispatchContext in L40 (14:00)
 import DispatchContext from '../DispatchContext'
+//Added StateContext in L44 (10:25): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+import StateContext from '../StateContext'
+
 
 //Added in: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview
 
@@ -12,7 +15,8 @@ function HeaderLoggedIn(props) {
 
     //de-structure property setLoggedIn from object {} ExampleContext in L40 (14:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391868#overview
     const appDispatch = useContext(DispatchContext)
-
+//L44 (10:40) added appContext: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+    const appState = useContext(StateContext)
 
     function handleLogout() {
             //Added at (6:50): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18254880#overview
@@ -23,9 +27,11 @@ function HeaderLoggedIn(props) {
             appDispatch({ type: "logout" })
 
             //Remove token, username and avatar from localStorage
-            localStorage.removeItem("complexappToken")
-            localStorage.removeItem("complexappUsername")
-            localStorage.removeItem("complexappAvatar")
+            /* Removed in L44(9:30) - useEffect in Main.js: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+                localStorage.removeItem("complexappToken")
+                localStorage.removeItem("complexappUsername")
+                localStorage.removeItem("complexappAvatar")
+            */
     }
 
 
@@ -43,7 +49,10 @@ function HeaderLoggedIn(props) {
 {/* Dynamic img Avatar Link URL added L35: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18254880#overview */}
             {/* <img className="small-header-avatar" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" /> */}
             {/* This pulls the image from the registered email. If none found, defaults to default gravatar.com logo */}
-            <img className="small-header-avatar" src={localStorage.getItem("complexappAvatar")} />
+{/* L44 (10:55) replace localStorage.getItem(): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview */}
+            {/* <img className="small-header-avatar" src={localStorage.getItem("complexappAvatar")} /> */}
+            <img className="small-header-avatar" src={appState.user.avatar} />
+
 
             </a>
 

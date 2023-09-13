@@ -31,10 +31,14 @@ function HeaderLoggedOut(props) {
                 console.log("HeaderLoggedOut => handleSubmit successful loggin attempt returned: ", response.data)
 
 // Added localStorage in L35 (2:20): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18254880#overview
-                // localStorage.setItem(a, b)
+                // localStorage.setItem(a, b) 
+
+ //Replaced localStorage.setItem() in L44 useEffect: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview     
+            /* MOVED TO MAIN.js IN L44 (7:45)                      
                 localStorage.setItem("complexappToken", response.data.token)
                 localStorage.setItem("complexappUsername", response.data.username)
                 localStorage.setItem("complexappAvatar", response.data.avatar)
+            */
 
 // Added props.setLoggedIn(true) in L34 @7:42: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18241572#overview
                 // props.setLoggedIn(true)
@@ -42,7 +46,8 @@ function HeaderLoggedOut(props) {
 
     // L42 (10:26) change setLoggedIn(false) to appDispatch({type: "logout"}): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18405574#overview
             // setLoggedIn(false) //pull from useContext in L40
-                appDispatch({ type: "login" })
+ //Replaced localStorage.setItem() in L44 useEffect and added to appDispatch: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview     
+                appDispatch({ type: "login", data: response.data })
 
             } else {
                 console.log("Incorrect username / password")
