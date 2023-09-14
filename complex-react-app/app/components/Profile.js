@@ -7,6 +7,7 @@ import {useParams} from 'react-router-dom'
 import Axios from 'axios'
 
 import StateContext from '../StateContext' //L45 (13:05): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505680#overview
+import ProfilePosts from "./ProfilePosts"
 
 
 function Profile() {
@@ -66,7 +67,9 @@ function Profile() {
             </a>
         </div>
 
-        <div className="list-group">
+        <ProfilePosts />
+{/* Moved to X component in L46: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505684#overview  */}
+        {/* <div className="list-group">
             <a href="#" className="list-group-item list-group-item-action">
             <img className="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" /> <strong>Example Post #1</strong>
             <span className="text-muted small">on 2/10/2020 </span>
@@ -79,7 +82,7 @@ function Profile() {
             <img className="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" /> <strong>Example Post #3</strong>
             <span className="text-muted small">on 2/10/2020 </span>
             </a>
-        </div>
+        </div> */}
 
     </Page>
   )
