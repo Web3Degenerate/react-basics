@@ -1,9 +1,15 @@
 //Added L38: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18282394#overview
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
 import Page from './Page'
 
 function ViewSinglePost() {
+
+  const [isLoading, setIsLoading] = useState(true)
+  const [post, setPost] = useState()
+
+  if (isLoading) return <Page title="...">Loading...</Page>
+
   return (
     <Page title="Fake Hardcoded Title">
 
