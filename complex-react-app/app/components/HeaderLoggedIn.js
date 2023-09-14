@@ -45,16 +45,18 @@ function HeaderLoggedIn(props) {
                 <span className="chat-count-badge text-white"> </span>
             </span>
 
-            <a href="#" className="mr-2">
+{/* Dynamic link added in L45 (~4th - 5th minute): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505680#overview  */}
+            <Link to={`/profile/${appState.user.username}`} className="mr-2">
 {/* Dynamic img Avatar Link URL added L35: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18254880#overview */}
             {/* <img className="small-header-avatar" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" /> */}
             {/* This pulls the image from the registered email. If none found, defaults to default gravatar.com logo */}
 {/* L44 (10:55) replace localStorage.getItem(): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview */}
             {/* <img className="small-header-avatar" src={localStorage.getItem("complexappAvatar")} /> */}
-            <img className="small-header-avatar" src={appState.user.avatar} />
+
+                <img className="small-header-avatar" src={appState.user.avatar} />
 
 
-            </a>
+            </Link>
 
             <Link className="btn btn-sm btn-success mr-2" to="/create-post">
             Create Post
