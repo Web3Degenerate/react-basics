@@ -198,3 +198,12 @@ Axios.defaults.baseURL = "http://localhost:8080"
 ## Tabbed Navigation
 
 15. Starts around [L46](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505684#overview)
+
+## Format Date in JS
+
+16. Format dateTime to date in [L47 at (6:37)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505708#overview)
+
+```js
+const date = new Date(post.createdDate)
+const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+```
