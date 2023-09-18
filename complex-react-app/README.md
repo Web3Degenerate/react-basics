@@ -45,8 +45,28 @@ Spin up local environment with **npm run dev** in `/complex-react-app` and **npm
    - Install [React markdown](https://www.npmjs.com/package/react-markdown) with:
 
      - `npm i react-markdown`
+     - import with `import ReactMarkdown from 'react-markdown'`
 
-8. Create file `webpack.config.js` and copy file in Lesson 14.
+8. Install React Tooltip in [L51 (1:15)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18591542#overview) and apply to **ViewSinglePost.js**
+
+   - Install [React Tooltip](https://www.npmjs.com/package/react-tooltip) with:
+
+     - `npm i react-tooltip`
+     - import with `import {Tooltip} from 'react-tooltip'`
+     - _There's an object inside this package called `Tooltip`_
+     - We renamed it to `ReactTooltip` which was a popular name for it in the past:
+     - `import {Tooltip as ReactTooltip} from 'react-tooltip'` //import {Tooltip as ReactTooltip} from 'react-tooltip' if you want to use a different name for it.`
+
+   - In **ViewSinglePost.js** add: `data-tooltip-content="Edit Post" data-tooltip-id="edit"`
+
+   ```js
+   <a href="#" data-tooltip-content="Edit Post" data-tooltip-id="edit" className="text-primary mr-2" title="Edit">
+     <i className="fas fa-edit"></i>
+   </a>
+   <ReactTooltip id="edit" className="custom-tooltip" />
+   ```
+
+9. Create file `webpack.config.js` and copy file in Lesson 14.
 
 ## VS Code Snippet
 
@@ -250,3 +270,7 @@ useEffect(() => {
   }
 }, [])
 ```
+
+### Hover label in L51
+
+- [L51](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18591542#overview) covers hover labels.

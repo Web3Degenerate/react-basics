@@ -11,6 +11,8 @@ import LoadingDotsIcon from './LoadingDotsIcon' //Added in L48 (~2:50): https://
 
 //L50 add react-markdown
 import ReactMarkdown from 'react-markdown'
+//L51 add react-tooltip
+import {Tooltip as ReactTooltip} from 'react-tooltip' //import {Tooltip as ReactTooltip} from 'react-tooltip' if you want to use a different name for it.
 
 
 function ViewSinglePost() {
@@ -71,8 +73,17 @@ const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYe
             <h2>{post.title}</h2>
 
             <span className="pt-2">
-            <a href="#" className="text-primary mr-2" title="Edit"><i className="fas fa-edit"></i></a>
-            <a className="delete-post-button text-danger" title="Delete"><i className="fas fa-trash"></i></a>
+                                                                                    {/* Browser default: title="Edit" */}
+              <a href="#" data-tooltip-content="Edit Post" data-tooltip-id="edit" className="text-primary mr-2">
+                  <i className="fas fa-edit"></i>          
+              </a>
+              <ReactTooltip id="edit" className="custom-tooltip" />{" "}
+
+              <a data-tooltip-content="Delete Post" data-tooltip-id="delete" className="delete-post-button text-danger">
+                  <i className="fas fa-trash"></i>    
+              </a>
+              <ReactTooltip id="delete" className="custom-tooltip" />
+
             </span>
         </div>
 
