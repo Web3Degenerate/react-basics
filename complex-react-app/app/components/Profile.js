@@ -26,10 +26,15 @@ function Profile() {
 
 
     useEffect(() => {
+        const ourRequest = Axios.CancelToken.source() //generates token that can be used
+
         //L45 Get around useEffect not directly allowed to use async/await: (11:10): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505680#overview
         async function fetchData(){
             try {
-                const response = await Axios.post(`/profile/${username}`, {token: appState.user.token})
+                //L49: in Axios POST request, the 2nd argument is what you want to send to the server
+                // in GET request our cancelToken is the 2nd arguemnt. In POST request, it'd be the third.
+                // const response = await Axios.post(`/profile/${username}`, {token: appState.user.token})
+                const response = await Axios.post(`/profile/${username}`, {token: appState.user.token}, {cancelToken: ourRequest.token})
                 setProfileData(response.data)
             } catch(e){
                 console.log("Error in Profile.js useEffect catch block was: ", e)
@@ -37,6 +42,10 @@ function Profile() {
         }
 
         fetchData()
+        // LL49 (2:15) Setup arrow fn to clean up when this component (ViewSinglePost) is done running or "Unmounted": https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528070#overview
+        return () => {
+            ourRequest.cancel()
+        }        
 
     }, []) //empty array our way of saying, only run this function the very first time this component is rendered.
 

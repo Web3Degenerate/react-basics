@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react"
 import {useParams, Link} from 'react-router-dom'
 import Axios from 'axios'
 
+import LoadingDotsIcon from './LoadingDotsIcon' //Added in L48 (~4:05): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528068#overview
+
 function ProfilePosts() {
 
     const {username} = useParams()
@@ -15,9 +17,12 @@ function ProfilePosts() {
 
 //This function will run any time state changes, or parent props passed in run
     useEffect(() => {
+        const ourRequest = Axios.CancelToken.source() //generates token that can be used
+
         async function fetchPosts() {
             try {
-                const response = await Axios.get(`/profile/${username}/posts`)
+                // const response = await Axios.get(`/profile/${username}/posts`)
+                const response = await Axios.get(`/profile/${username}/posts`, {cancelToken: ourRequest.token}) //L49 (4:30)
                 console.log("ProfilePosts.js useEffect/fetchPosts Axios get request for ${username}/posts returned: ", response)
             //L46 (~9:00)    
                 setPosts(response.data)
@@ -29,9 +34,16 @@ function ProfilePosts() {
         }
 
         fetchPosts() //you can't pass useEffect an async function directly
+// LL49 (2:15) Setup arrow fn to clean up when this component (ViewSinglePost) is done running or "Unmounted": https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528070#overview
+        return () => {
+            ourRequest.cancel()
+        }
+
     }, [])
 
-    if (isLoading) return <div>Loading...</div>
+    // if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <LoadingDotsIcon />
+
 
   return (
     <div className="list-group">

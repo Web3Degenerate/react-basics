@@ -1,5 +1,7 @@
 ## Commands
 
+Spin up local environment with **npm run dev** in `/complex-react-app` and **npm run start** in `/backend-api`
+
 1. Set up package.json
 
    - `npm init -y`
@@ -38,7 +40,13 @@
 
    - `npm i axios`
 
-7. Create file `webpack.config.js` and copy file in Lesson 14.
+7. 6A Install React Markdown [(L50 3:30)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18581954#overview) and apply it to **ViewSinglePost.js**
+
+   - Install [React markdown](https://www.npmjs.com/package/react-markdown) with:
+
+     - `npm i react-markdown`
+
+8. Create file `webpack.config.js` and copy file in Lesson 14.
 
 ## VS Code Snippet
 
@@ -206,4 +214,39 @@ Axios.defaults.baseURL = "http://localhost:8080"
 ```js
 const date = new Date(post.createdDate)
 const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+```
+
+### Google Chrome Slow Connection in `Network` tab
+
+- See [L48 (5:10)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528068#overview) select Network => _change_ **No Throttling** to **Slow 3G**
+
+## Cleanup Function when Component is finished running (aka **Unmounted**)
+
+- See [L49 (2:15)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528070#overview)
+  - Typically used in cleaning up asyncronous network requests, keybindings, full screen search overlay, etc.
+  - In ViewSinglePost.js component set up the cleanup function at the end of our **useEffect()** function:
+
+```js
+//L48 (3:50) - set up cancel
+const ourRequest = Axios.CancelToken.source() //generates token that can be used
+useEffect(() => {
+  async function fetchPost() {
+    try {
+      // const response = await Axios.get(`/post/${id}`)
+      //in Axios POST request, the 2nd argument is what you want to send to the server
+      // in GET request our cancelToken is the 2nd arguemnt. In POST request, it'd be the third.
+      const response = await Axios.get(`/post/${id}`, { cancelToken: ourRequest.token }) //L48 (4:30)
+
+      console.log("ViewSinglePost.js useEffect/fetchPost Axios get request for ${username}/posts returned: ", response)
+      setPost(response.data)
+      setIsLoading(false)
+    } catch (e) {
+      console.log("Error in ProfilePosts useEffect catch block was: ", e)
+    }
+  }
+  fetchPost() //you can't pass useEffect an async function directly
+  return () => {
+    ourRequest.cancel()
+  }
+}, [])
 ```
