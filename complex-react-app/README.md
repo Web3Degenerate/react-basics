@@ -297,3 +297,7 @@ useEffect(() => {
 ```js
 <input onChange={e => dispatch({ type: "titleChange", value: e.target.value })} value={state.title.value} />
 ```
+
+## Client-Side Form Validation
+
+- [L54](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18775922#overview)

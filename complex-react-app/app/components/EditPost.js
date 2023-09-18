@@ -49,19 +49,44 @@ function EditPost() {
                 draft.isFetching = false
                 return //exit case
             case "titleChange":
+                //draft.title.hasErrors: false // L54 (15:25) better way turn error flash message off: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18775922#overview
                 draft.title.value = action.value
                 return 
             case "bodyChange":
+                //draft.body.hasErrors: false // L54 (15:25) better way turn error flash message off: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18775922#overview
                 draft.body.value = action.value
                 return
             case "submitRequest": 
-                draft.sendCount++
+                //L54 check if form hasErrors
+                if(!draft.title.hasErrors && !draft.body.hasErrors){
+                    draft.sendCount++
+                }
                 return
             case "saveRequestStarted":
                 draft.isSaving = true
                 return
             case "saveRequestFinished":
                 draft.isSaving = false
+                return
+            case "titleRules":
+                if (!action.value.trim()){ //L54 (5:50) .trim() remove blank spaces
+                   draft.title.hasErrors = true
+                   draft.title.message = "The title field may not be blank. Please add a title."
+                }
+                if(action.value.trim()){
+                    draft.title.hasErrors = false
+                    draft.title.message = ""
+                }
+                return
+            case "bodyRules":
+                if (!action.value.trim()){ //L54 (5:50) .trim() remove blank spaces
+                    draft.body.hasErrors = true
+                    draft.body.message = "The post field may not be blank. Please add a text to this post."
+                }
+                if(action.value.trim()){
+                    draft.body.hasErrors = false
+                    draft.body.message = ""
+                }
                 return
         }
     }
@@ -75,6 +100,9 @@ function EditPost() {
 // L53 (4:25) reate submitHandler: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18770556#overview
     function submitHandler(e){
         e.preventDefault()
+        dispatch({type: "titleRules", value: state.title.value}) //L54 (11:25) add titleRules to submit, not just onBlur. set hasErrors to true on submit
+        dispatch({type: "bodyRules", value: state.body.value}) //L54 (13:35) add titleRules to submit, not just onBlur. set hasErrors to true on submit
+     
         dispatch({type: "submitRequest"})
     }
 
@@ -166,8 +194,11 @@ function EditPost() {
 {/* autofocus becomes autoFocus in JSX  */}
         {/* <input onChange={e => setTitle(e.target.value)} autoFocus name="title" id="post-title" className="form-control form-control-lg form-control-title" type="text" placeholder="" autoComplete="off" /> */}
         {/* <input value={post.title} autoFocus name="title" id="post-title" className="form-control form-control-lg form-control-title" type="text" placeholder="" autoComplete="off" /> */}
-        <input onChange={(e) => dispatch({type: "titleChange", value: e.target.value})} value={state.title.value} autoFocus name="title" id="post-title" className="form-control form-control-lg form-control-title" type="text" placeholder="" autoComplete="off" />
+        <input onBlur={e => dispatch({type: "titleRules", value: e.target.value})} onChange={(e) => dispatch({type: "titleChange", value: e.target.value})} value={state.title.value} autoFocus name="title" id="post-title" className="form-control form-control-lg form-control-title" type="text" placeholder="" autoComplete="off" />
         
+        {state.title.hasErrors &&
+            <div className="alert alert-danger small liveValidateMessage">{state.title.message}</div>
+        }
 
         </div>
 
@@ -178,8 +209,10 @@ function EditPost() {
         {/* <textarea onChange={e => setBody(e.target.value)} name="body" id="post-body" className="body-content tall-textarea form-control" type="text"></textarea> */}
         {/* <textarea name="body" id="post-body" className="body-content tall-textarea form-control" type="text"></textarea> */}
         {/* <textarea name="body" id="post-body" className="body-content tall-textarea form-control" type="text" value={post.body} /> */}
-        <textarea onChange={(e) => dispatch({type: "bodyChange", value: e.target.value})} name="body" id="post-body" className="body-content tall-textarea form-control" type="text" value={state.body.value} />
-
+        <textarea onBlur={e => dispatch({type: "bodyRules", value: e.target.value})} onChange={(e) => dispatch({type: "bodyChange", value: e.target.value})} name="body" id="post-body" className="body-content tall-textarea form-control" type="text" value={state.body.value} />
+        {state.body.hasErrors &&
+            <div className="alert alert-danger small liveValidateMessage">{state.body.message}</div>
+        }
         
         </div>
 

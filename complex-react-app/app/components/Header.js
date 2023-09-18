@@ -21,7 +21,8 @@ function Header(props) {  //added props parameter in L36 (~7:00)
               <div className="container d-flex flex-column flex-md-row align-items-center p-3">
                 <h4 className="my-0 mr-md-auto font-weight-normal">
                   <Link to="/" className="text-white">
-                    AWFFL <br></br>Hall of Records
+                    ACME Health
+                    {/* <br></br>Hall of Records */}
                   </Link>
                 </h4>
                 
