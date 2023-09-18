@@ -223,6 +223,18 @@ Axios.defaults.baseURL = "http://localhost:8080"
   - **Immer** gives us a draft, essentially a carbon copy of state and then we are free to directly modify and mutate that draft.
   -
 
+15. Apply **useImmerReducer** to `EditPost.js`
+
+-
+
+- It replaces these three lines of code:
+
+```js
+const { id } = useParams()
+const [isLoading, setIsLoading] = useState(true)
+const [post, setPost] = useState()
+```
+
 ## Tabbed Navigation
 
 15. Starts around [L46](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505684#overview)
@@ -279,3 +291,9 @@ useEffect(() => {
 
 - Covered in Lessons 52 and 53.
   - In [L52](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18594986#overview)
+  - In [L53](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18770556#overview) set up onChange handlers to allow us to edit the `title` and `body` fields
+  - `onChange={() => dispatch({})}`
+
+```js
+<input onChange={e => dispatch({ type: "titleChange", value: e.target.value })} value={state.title.value} />
+```
