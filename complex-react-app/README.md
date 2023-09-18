@@ -274,3 +274,8 @@ useEffect(() => {
 ### Hover label in L51
 
 - [L51](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18591542#overview) covers hover labels.
+
+## Edit Post
+
+- Covered in Lessons 52 and 53.
+  - In [L52](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18594986#overview)

@@ -74,9 +74,9 @@ const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYe
 
             <span className="pt-2">
                                                                                     {/* Browser default: title="Edit" */}
-              <a href="#" data-tooltip-content="Edit Post" data-tooltip-id="edit" className="text-primary mr-2">
+              <Link to={`/post/${post._id}/edit`} data-tooltip-content="Edit Post" data-tooltip-id="edit" className="text-primary mr-2">
                   <i className="fas fa-edit"></i>          
-              </a>
+              </Link>
               <ReactTooltip id="edit" className="custom-tooltip" />{" "}
 
               <a data-tooltip-content="Delete Post" data-tooltip-id="delete" className="delete-post-button text-danger">

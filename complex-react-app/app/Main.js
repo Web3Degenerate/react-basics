@@ -27,6 +27,8 @@ import DispatchContext from './DispatchContext'
 import { useImmerReducer } from 'use-immer'
 
 import Profile from "./components/Profile"
+//Added in L52: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18594986#overview
+import EditPost from './components/EditPost'  
 
 function Main(){
 
@@ -103,6 +105,7 @@ function Main(){
                     <Route path="/terms" element={<Terms />} />
                     <Route path="/create-post" element={<CreatePost />} />
                     <Route path="/post/:id" element={<ViewSinglePost />} />
+                    <Route path="/post/:id/edit" element={<EditPost />} />
 
                 </Routes>
 
