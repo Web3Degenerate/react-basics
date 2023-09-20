@@ -37,7 +37,8 @@ function EditPost() {
         isFetching: true,
         isSaving: false,
         id: useParams().id,
-        sendCount: 0
+        sendCount: 0, 
+        notFound: false
     }
 
 
@@ -88,6 +89,9 @@ function EditPost() {
                     draft.body.message = ""
                 }
                 return
+            case "notFound":
+                draft.notFound = true
+                return
         }
     }
 
@@ -122,11 +126,16 @@ function EditPost() {
             const response = await Axios.get(`/post/${state.id}`, {cancelToken: ourRequest.token}) //L52 (18:10)
 
             console.log("EditPost.js useEffect/fetchPost Axios get request for ${username}/posts returned: ", response)
-            //L52 (15:11) replace with dispatch({type: "varName"})
-            dispatch({type: "fetchComplete", value: response.data})
-            // setPost(response.data)
-            // setIsLoading(false)
 
+//L55 (4:00) wrap in if condition checking if any data came back from the server. 
+            if(response.data) {
+                    //L52 (15:11) replace with dispatch({type: "varName"})
+                    dispatch({type: "fetchComplete", value: response.data})
+                    // setPost(response.data)
+                    // setIsLoading(false)
+            }else{
+                    dispatch({type: "notFound"})
+            }
         } catch(e) {
             console.log("Error in EditPosts useEffect (or request was cancelled) catch block was: ", e)
         }
@@ -167,6 +176,8 @@ function EditPost() {
     }, [state.sendCount])
 
 
+    
+
 
   // if (isLoading) return <Page title="...">Loading...</Page>
   if (state.isFetching) 
@@ -184,8 +195,11 @@ function EditPost() {
   return (
     <Page title="Edit Post">
 
+{/* L55 Add Back Button */}
+    <Link className="small font-weight-bold" to={`/post/${state.id}`}>&laquo; Back to Posts List</Link>
+
     {/* <form onSubmit={handleSubmit}> */}
-    <form onSubmit={submitHandler}>
+    <form className="mt-3" onSubmit={submitHandler}>
 
         <div className="form-group">
         <label htmlFor="post-title" className="text-muted mb-1">
