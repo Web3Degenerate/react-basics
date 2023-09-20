@@ -30,6 +30,9 @@ import Profile from "./components/Profile"
 //Added in L52: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18594986#overview
 import EditPost from './components/EditPost'  
 
+//Added global 404 not found component in L55 (12:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview
+import NotFound from './components/NotFound'
+
 function Main(){
 
 // Added useReducer at L41 (1:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391870#overview
@@ -106,7 +109,8 @@ function Main(){
                     <Route path="/create-post" element={<CreatePost />} />
                     <Route path="/post/:id" element={<ViewSinglePost />} />
                     <Route path="/post/:id/edit" element={<EditPost />} />
-
+    {/* Catchall Global 404 Not Found via "*" route added in L55 (12:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview */}
+                    <Route path="*" element={<NotFound message="Main.js Routes, path='*' top level url that can't be found."/>} />
                 </Routes>
 
                 <Footer />

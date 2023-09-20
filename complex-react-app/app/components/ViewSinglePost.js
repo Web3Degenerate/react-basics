@@ -14,6 +14,10 @@ import ReactMarkdown from 'react-markdown'
 //L51 add react-tooltip
 import {Tooltip as ReactTooltip} from 'react-tooltip' //import {Tooltip as ReactTooltip} from 'react-tooltip' if you want to use a different name for it.
 
+//L55 (10:20) import 404 Not Found component
+import NotFound from './NotFound'
+
+
 
 function ViewSinglePost() {
 
@@ -51,6 +55,12 @@ function ViewSinglePost() {
     }
     
   }, [])
+
+
+//L55 (10:50) we don't have EditPost's Reducer case function, so here we can trigger the 404 on !post undefined and !isLoading completed: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview
+  if (!isLoading && !post){ //meaning the loading has completed and no object returned from server (!psot)
+    return <NotFound message="ViewSinglePost.js"/>
+  }
 
   // if (isLoading) return <Page title="...">Loading...</Page>
   if (isLoading) 

@@ -13,6 +13,11 @@ import StateContext from "../StateContext"
 // L53 (16:30) bring  in app wide dispatch for the flash message
 import DispatchContext from "../DispatchContext"
 
+
+//L55 (8:45) import NotFound componet
+import NotFound from './NotFound'
+
+
 function EditPost() {
 
 //L53 (10:50) add appState (not state since currently using): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18770556#overview
@@ -176,7 +181,13 @@ function EditPost() {
     }, [state.sendCount])
 
 
-    
+//L55 (5:33) added if state.notFound
+    if (state.notFound){
+        return (
+            // <NotFound />
+            <NotFound message="EditPost.js"/>
+        )
+    }
 
 
   // if (isLoading) return <Page title="...">Loading...</Page>
