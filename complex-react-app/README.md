@@ -301,3 +301,17 @@ useEffect(() => {
 ## Client-Side Form Validation
 
 - [L54](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18775922#overview)
+
+## 404 Page
+
+- [L55 (~10th min)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview) Added NotFound.js component to EditPost.js, ViewSinglePost.js and `Main.js`
+  - `Main.js` used a global route catchall
+
+```js
+<Route path="*" element={<NotFound message="Main.js Routes, path='*' top level url that can't be found." />} />
+```
+
+## Access Restriction: Only User can edit own post
+
+- [L55 (14:00)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview)
+  - x

@@ -1,7 +1,7 @@
 //Added in L52 (0:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18594986#overview
 import React, { useEffect, useState, useContext } from "react"
 import Page from './Page'
-import {useParams, Link} from 'react-router-dom'
+import {useParams, Link, useNavigate } from 'react-router-dom'
 import Axios from 'axios'
 import LoadingDotsIcon from './LoadingDotsIcon' //Added in L48 (~2:50): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528068#overview
 
@@ -24,6 +24,9 @@ function EditPost() {
     const appState = useContext(StateContext)
 // L53 (16:30) bring  in app wide dispatch for the flash message
     const appDispatch = useContext(DispatchContext)
+
+//L55 (16:50) add useNavigate() to redirect to homepage when logged in user does not equal post author: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview
+    const navigate = useNavigate()
 
 //L52 (9:05) add reducer: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18594986#overview
 // useImmerReducer(function that serves as our reducer, initial/original state)
@@ -136,8 +139,14 @@ function EditPost() {
             if(response.data) {
                     //L52 (15:11) replace with dispatch({type: "varName"})
                     dispatch({type: "fetchComplete", value: response.data})
-                    // setPost(response.data)
-                    // setIsLoading(false)
+                            // setPost(response.data)
+                            // setIsLoading(false)
+    //L55 (15:40) Check username matches author of post: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview
+                    if (appState.user.username != response.data.author.username) {
+                        appDispatch({type: "flashMessage", value: "You do not have permission to edit that post."}) 
+                        // redirect to homepage
+                        navigate("/")
+                    }
             }else{
                     dispatch({type: "notFound"})
             }

@@ -1,9 +1,9 @@
 //Added L38: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18282394#overview
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 
 import Page from './Page'
 
-import {useParams, Link} from 'react-router-dom'
+import {useParams, Link, useNavigate } from 'react-router-dom'
 
 import Axios from 'axios'
 
@@ -16,6 +16,10 @@ import {Tooltip as ReactTooltip} from 'react-tooltip' //import {Tooltip as React
 
 //L55 (10:20) import 404 Not Found component
 import NotFound from './NotFound'
+//L56 (3:32) import context to check if logged in user is author for edit/delete: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18884042#overview
+import StateContext from '../StateContext'
+//L56 (11:33) import DispatchContext
+import DispatchContext from '../DispatchContext'
 
 
 
@@ -25,6 +29,13 @@ function ViewSinglePost() {
 
   const [isLoading, setIsLoading] = useState(true)
   const [post, setPost] = useState()
+
+//L56 (3:56): import state context: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18884042#overview
+  const appState = useContext(StateContext)  
+//L56 (11:40)
+  const appDispatch = useContext(DispatchContext) 
+//LL56 (12:40)
+  const navigate = useNavigate()
 
 //L47 (~3:20): Imported useEffect() from ProfilePosts: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505708#overview   
   //This function will run any time state changes, or parent props passed in run
@@ -75,6 +86,33 @@ function ViewSinglePost() {
 const date = new Date(post.createdDate)
 const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
 
+//L56 add isOwner to check if user has permissions to delete their own post only
+      function isOwner(){
+        if (appState.loggedIn){
+          return appState.user.username == post.author.username //return either true or false
+        }
+        return false //not the author of this post.
+      }
+
+//L56 (6:14) set up deleteHandler: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18884042#overview      
+     async function deleteHandler(){
+        const areYouSure = window.confirm("Do you really want to delete this post?")
+        if(areYouSure){
+          // alert("post deleted.")
+          try {
+            const response = await Axios.delete(`/post/${id}`, {data: {token: appState.user.token}})
+            if (response.data == "Success"){ //server configured response
+              //Step 1. Display flash message
+                appDispatch({type: "flashMessage", value: "Post was successfully deleted."})
+              //Step 2. Redirect back to the current user's Profile
+              navigate(`/profile/${appState.user.username}`)
+            }
+          }catch(e){
+            console.log("error in ViewSinglePost deleteHandler catch block is ", e)
+          }
+        }
+      }
+
   return (
     <Page title={post.title}>
 
@@ -82,19 +120,21 @@ const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYe
             {/* <h2>Example Post Title</h2> */}
             <h2>{post.title}</h2>
 
-            <span className="pt-2">
-                                                                                    {/* Browser default: title="Edit" */}
-              <Link to={`/post/${post._id}/edit`} data-tooltip-content="Edit Post" data-tooltip-id="edit" className="text-primary mr-2">
-                  <i className="fas fa-edit"></i>          
-              </Link>
-              <ReactTooltip id="edit" className="custom-tooltip" />{" "}
 
-              <a data-tooltip-content="Delete Post" data-tooltip-id="delete" className="delete-post-button text-danger">
-                  <i className="fas fa-trash"></i>    
-              </a>
-              <ReactTooltip id="delete" className="custom-tooltip" />
+{/* L56 (2:15): check if user owns post: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18884042#overview */}
+            {isOwner() && (
+                      <span className="pt-2">                                                                                       {/* Browser default: title="Edit" */}
+                            <Link to={`/post/${post._id}/edit`} data-tooltip-content="Edit Post" data-tooltip-id="edit" className="text-primary mr-2">
+                                <i className="fas fa-edit"></i>          
+                            </Link>
+                            <ReactTooltip id="edit" className="custom-tooltip" />{" "}
 
-            </span>
+                            <a onClick={deleteHandler} data-tooltip-content="Delete Post" data-tooltip-id="delete" className="delete-post-button text-danger">
+                                <i className="fas fa-trash"></i>    
+                            </a>
+                            <ReactTooltip id="delete" className="custom-tooltip" />
+                      </span>
+            )}
         </div>
 
         <p className="text-muted small mb-4">
