@@ -36,6 +36,8 @@ import NotFound from './components/NotFound'
 //Added Search Overlay in L57: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
 import Search from './components/Search'  
 
+//Import installed react-transition-group for CSS transitions in L58 (2:23): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19002510#overview
+import { CSSTransition } from 'react-transition-group'
 
 function Main(){
 
@@ -128,7 +130,12 @@ function Main(){
     {/* Add Search component L57 (1:35) outside of our Routes: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview */}
             {/* L57 (6:40) add conditional display of Search component with initialState and our reducer cases */}
                 {/* <Search /> */}
-                {state.isSearchOpen ? <Search /> : ''}
+                {/* {state.isSearchOpen ? <Search /> : ''} */}
+            {/* L58 (3:48) replace Search with CSS Transitions: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19002510#overview */}
+                <CSSTransition timeout={330} in={state.isSearchOpen} classNames="search-overlay" unmountOnExit >
+                    <Search />
+                </CSSTransition>
+
 
                 <Footer />
 

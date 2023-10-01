@@ -180,7 +180,7 @@ body {
     margin: 0;
   }
   
-  /* Search Overaly */
+  /* Search Overaly Covered in L58 (~7th min): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19002510#overview */
   .search-overlay {
     display: flex;
     flex-direction: column;

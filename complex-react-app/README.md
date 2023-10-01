@@ -68,6 +68,10 @@ Spin up local environment with **npm run dev** in `/complex-react-app` and **npm
 
 9. Create file `webpack.config.js` and copy file in Lesson 14.
 
+10. Install the [react-transition-group](https://www.npmjs.com/package/react-transition-group) package. [L58]
+
+- install with `npm i react-transition-group`
+
 ## VS Code Snippet
 
 1. Open the **command palette** with `CTRL + SHIFT + P`
@@ -283,9 +287,17 @@ useEffect(() => {
 }, [])
 ```
 
-### Hover label in L51
+### Tool Tip (Hover label) in L51, L58
 
-- [L51](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18591542#overview) covers hover labels.
+- [L51](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18591542#overview) covers hover labels. Applied to logged in users's edit/delete icons.
+
+  - Installed with `npm i react-tooltip`
+  - import with `import {Tooltip} from 'react-tooltip'`
+
+- [L58 (8:33)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19002510#overview), applied to HeaderLoggedIn.js component's search, comment and profile icons.
+  - imported into `HeaderLoggedIn.js` with different import statement to use with self closing tag
+    - `import {Tooltip as ReactTooltip } from 'react-tooltip'`
+    - applied with `<ReactTooltip />`
 
 ## Edit Post
 
@@ -399,3 +411,12 @@ function HeaderLoggedIn(props) {
   )
 }
 ```
+
+### Close Overlay with `esc` key:
+
+- In Search.js component [L57 (10:44)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview)
+
+## React CSS Transitions (Used on Overlay)
+
+- Install the [react-transition-group](https://www.npmjs.com/package/react-transition-group) package.
+  - install with `npm i react-transition-group`

@@ -1,24 +1,42 @@
 import React, { useEffect, useContext } from "react"
 
-//L57 () import DispatchContext and StateContext
+//L57 (9:10) import DispatchContext and StateContext
         //From HeaderLoggedIn.js see DispatchContext in L40 (14:00)
 import DispatchContext from '../DispatchContext'
         //From HeaderLoggedIn.js see StateContext in L44 (10:25): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
-import StateContext from '../StateContext'
+// import StateContext from '../StateContext'
 
 function Search() {
 
     const appDispatch = useContext(DispatchContext)
-    const appState = useContext(StateContext)
+    // const appState = useContext(StateContext)
 
     function handleCloseSearch(e) {
         e.preventDefault()
-        //L57 (~9th min) - use our app-wide dispatch to send off an action of open search
+        //L57 (~9:20ish min) - use our app-wide dispatch to send off an action of close search
             // give appDispatch the object type: "closeSearch" case
-
-        // alert("close search icon clicked")
         appDispatch({type: "closeSearch"})
+    }
 
+// LL57 (10:56): Close with Escape Key https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
+    useEffect(() => {
+        //generic web/javascript way: set up event listener on keyup when page loads
+        //L57 (13:34) - CLEAN UP
+            // - What happens when this Search.js component is unmounted/removed? 
+            // We don't want to keep listening for escape keyboard press
+        document.addEventListener("keyup", searchKeyPressHandler)
+
+            //From within useEffect, we can return a cleanup function that runs when Search.js unmounts. (L57 13:49)
+            //you could give it a named function but we'll give it an arrow function
+        return () => document.removeEventListener("keyup", searchKeyPressHandler)
+
+    }, [])
+
+    function searchKeyPressHandler(e){
+        //check if keypress was escape key. Runs every time any key is pressed
+        if(e.keyCode == 27){
+            appDispatch({type: "closeSearch"})
+        }
 
     }
 
@@ -29,9 +47,10 @@ function Search() {
           <label htmlFor="live-search-field" className="search-overlay-icon">
             <i className="fas fa-search"></i>
           </label>
-          <input autoFocus type="text" autoComplete="off" id="live-search-field" className="live-search-field" placeholder="What are you interested in?" />
+          <input autoFocus type="text" autoComplete="off" id="live-search-field" className="live-search-field" placeholder="Type here to search for a post" />
             
-            <span onClick={handleCloseSearch} className="close-live-search">
+            {/* <span onClick={handleCloseSearch} className="close-live-search"> */}
+            <span onClick={() => appDispatch({type: "closeSearch"})} className="close-live-search">
                 <i className="fas fa-times-circle"></i>
             </span>
 
