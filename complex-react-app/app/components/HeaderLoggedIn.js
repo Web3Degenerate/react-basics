@@ -34,12 +34,23 @@ function HeaderLoggedIn(props) {
             */
     }
 
+    // L57 (8:01) onClick handler for search icon/Search overlay
+    // const handleSearchIcon = () => {
+    function handleSearchIcon(e) {
+        e.preventDefault()
+        //L57 (8:25) - use our app-wide dispatch to send off an action of open search
+            // give appDispatch the object type: "openSearch" case
+        appDispatch({type: "openSearch"})
+    }
 
   return (
         <div className="flex-row my-3 my-md-0">
-            <a href="#" className="text-white mr-2 header-search-icon">
-            <i className="fas fa-search"></i>
+
+        {/* L57 (7:35) search icon trigger search Overlay: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview */}
+            <a onClick={handleSearchIcon} href="#" className="text-white mr-2 header-search-icon">
+                <i className="fas fa-search"></i>
             </a>
+
             <span className="mr-2 header-chat-icon text-white">
                 <i className="fas fa-comment"></i>
                 <span className="chat-count-badge text-white"> </span>

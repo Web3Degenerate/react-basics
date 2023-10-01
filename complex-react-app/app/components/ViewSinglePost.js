@@ -105,7 +105,7 @@ const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYe
               //Step 1. Display flash message
                 appDispatch({type: "flashMessage", value: "Post was successfully deleted."})
               //Step 2. Redirect back to the current user's Profile
-              navigate(`/profile/${appState.user.username}`)
+                navigate(`/profile/${appState.user.username}`)
             }
           }catch(e){
             console.log("error in ViewSinglePost deleteHandler catch block is ", e)

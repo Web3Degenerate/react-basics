@@ -315,3 +315,87 @@ useEffect(() => {
 
 - [L55 (14:00)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview)
   - x
+
+## Add Search Overlay Component `Search.js`
+
+- [L57 (5:05)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview)
+
+  - In `Main.js`
+
+    - Add `<Search />` component just outisde of our `<Routes>` tag
+    - Add initial state of `isSearchOpen: false` in our `const initial state = {}` variable
+    - On our reducer create two cases, (1) openSearch and (2) closeSearch to mainpulate `isSearchOpen`
+    -
+
+  - Use HTML template for `Search.js` component from the [project github repo](https://github.com/LearnWebCode/react-course/blob/master/html-templates/search-is-visible.html)
+
+  ```js
+  //Main.js
+
+  //initial state variable
+  const intitialState = {
+    //loggedIn: Boolean(localStroage.getItem('complexappToken')),
+    //flashMessages: [].
+    //user: {token, username, avatar, etc},
+    isSearchOpen: false
+  }
+
+  //in our reducer
+  function ourReducer(draft, action) {
+    switch (action.type) {
+      //other cases...
+
+      case "openSearch":
+        //L57 (5:50) add openSearch and closeSearch cases: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
+        draft.isSearchOpen = true
+        return
+      case "closeSearch":
+        draft.isSearchOpen = false
+        return
+    }
+  }
+  ```
+
+  In `Main.js` return, make the `<Search />` component conditional
+
+  ```js
+
+    </Routes>
+    {state.isSearchOpen ? <Search /> : ''}
+    <Footer />
+
+  ```
+
+Make the search icon in the `HeaderLoggedIn,js` use our **app wide dispatch** to send off an action of `openSearch` (_isSearchOpen = true_) (L57 (7:06)).
+
+In `HeaderLoggedIn.js` component we've already imported our app-wide State and Dispatch Context:
+
+```js
+// HeaderLoggedIn.js
+import React, { useEffect, useContext } from "react"
+//Added DispatchContext in L40 (14:00)
+import DispatchContext from "../DispatchContext"
+//Added StateContext in L44 (10:25): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+import StateContext from "../StateContext"
+
+function HeaderLoggedIn(props) {
+  //de-structure property setLoggedIn from object {} ExampleContext in L40 (14:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391868#overview
+  const appDispatch = useContext(DispatchContext)
+  //L44 (10:40) added appContext: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
+  const appState = useContext(StateContext)
+
+  //L57 - call reducer case openSearch when icon clicked
+  function handleSearchIcon(e) {
+    e.preventDefault()
+    //L57 (8:25) - use our app-wide dispatch to send off an action of open search
+    // give appDispatch the object type: "openSearch" case
+    appDispatch({ type: "openSearch" })
+  }
+
+  return (
+    <a onClick={handleSearchIcon} href="#" className="text-white mr-2 header-search-icon">
+      <i className="fas fa-search"></i>
+    </a>
+  )
+}
+```

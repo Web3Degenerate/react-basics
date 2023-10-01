@@ -33,6 +33,10 @@ import EditPost from './components/EditPost'
 //Added global 404 not found component in L55 (12:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview
 import NotFound from './components/NotFound'
 
+//Added Search Overlay in L57: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
+import Search from './components/Search'  
+
+
 function Main(){
 
 // Added useReducer at L41 (1:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391870#overview
@@ -45,7 +49,9 @@ function Main(){
             token: localStorage.getItem("complexappToken"),
             username: localStorage.getItem("complexappUsername"),
             avatar: localStorage.getItem("complexappAvatar")
-        } 
+        },
+        //L57 (5:05) add state for our Search Component: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
+        isSearchOpen: false
     }
 
 // Call state draft b/c Immer in L43: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18418654#overview      
@@ -68,6 +74,13 @@ function Main(){
                 // return {loggedIn: state.loggedIn, flashMessages: state.flashMessages.concat(action.value)}
                 draft.flashMessages.push(action.value)
                 return //break
+            case "openSearch": 
+            //L57 (5:50) add openSearch and closeSearch cases: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
+                draft.isSearchOpen = true
+                return
+            case "closeSearch":
+                draft.isSearchOpen = false
+                return
         }
     }
 
@@ -112,6 +125,10 @@ function Main(){
     {/* Catchall Global 404 Not Found via "*" route added in L55 (12:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview */}
                     <Route path="*" element={<NotFound message="Main.js Routes, path='*' top level url that can't be found."/>} />
                 </Routes>
+    {/* Add Search component L57 (1:35) outside of our Routes: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview */}
+            {/* L57 (6:40) add conditional display of Search component with initialState and our reducer cases */}
+                {/* <Search /> */}
+                {state.isSearchOpen ? <Search /> : ''}
 
                 <Footer />
 
