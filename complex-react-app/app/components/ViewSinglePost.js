@@ -64,8 +64,8 @@ function ViewSinglePost() {
     return () => {
       ourRequest.cancel()
     }
-    
-  }, [])
+  // }, [])
+  }, [id]) //L62 (7:15) add dependency to update selected post via Search.js: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049988#overview
 
 
 //L55 (10:50) we don't have EditPost's Reducer case function, so here we can trigger the 404 on !post undefined and !isLoading completed: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview

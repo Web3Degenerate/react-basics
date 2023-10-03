@@ -420,3 +420,27 @@ function HeaderLoggedIn(props) {
 
 - Install the [react-transition-group](https://www.npmjs.com/package/react-transition-group) package.
   - install with `npm i react-transition-group`
+
+## Search **Results** with Immer package (_not reducer_)
+
+- [L60 (1:45)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996922#overview)
+- In `Search.js` component, import Immer.
+  - `import { useImmer } from 'use-immer'` (_similar to useState_)
+  - x
+
+See `Search.js` to delay searchTerm requests sent to our backend:
+
+```js
+//L60 (6:40) - 2nd useEffect. NOTE: use `useEffect()` when you want to do something every time a value changes.
+// useEffect(() => {}, [])
+useEffect(() => {
+  //Add delay to searchTerm before sending to backend
+  // const delay = setTimeout(function, seconds)
+  const delay = setTimeout(() => {
+    console.log("useEffects delayed searchTerm value is: ", state.searchTerm)
+  }, 3000)
+
+  //return clean up function - L60 (10:40)
+  return () => clearTimeout(delay)
+}, [state.searchTerm])
+```
