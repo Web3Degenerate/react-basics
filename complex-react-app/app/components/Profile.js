@@ -1,6 +1,7 @@
 // Added in L45: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505680#overview
 // Source: https://github.com/LearnWebCode/react-course/blob/master/html-templates/profile-posts.html
-import React, { useEffect, useContext, useState } from "react"
+// import React, { useEffect, useContext, useState } from "react" // L63 (2:30) remove useState and use Immer instead for profileData: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19053508#overview
+import React, { useEffect, useContext } from "react"
 import Page from './Page'
 
 import {useParams} from 'react-router-dom'
@@ -9,6 +10,8 @@ import Axios from 'axios'
 import StateContext from '../StateContext' //L45 (13:05): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505680#overview
 import ProfilePosts from "./ProfilePosts"
 
+//L62 (2:30) add useImmer
+import { useImmer } from 'use-immer'
 
 function Profile() {
 
@@ -17,11 +20,25 @@ function Profile() {
 //L45 (middle): 
     const appState = useContext(StateContext)
 //L45 (16:05): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505680#overview
-    const [profileData, setProfileData] = useState({
-        profileUsername: "...",
-        profileAvatar: 'https://gravatar.com/avatar/placeholder?s=128',
-        isFollowing: false,
-        counts: {postCount: "", followerCount: "", followingCount: ""}
+    // const [profileData, setProfileData] = useState({
+    //     profileUsername: "...",
+    //     profileAvatar: 'https://gravatar.com/avatar/placeholder?s=128',
+    //     isFollowing: false,
+    //     counts: {postCount: "", followerCount: "", followingCount: ""}
+    // })
+//L62 (2:50) replace useState with useImmer for profileData: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19053508#overview
+    const [state, setState] = useImmer({
+        // L62 (3:25) additional properties to help us with follow/unfollow
+            //follow request complete or not
+            followActionLoading: false,
+            startFollowingRequestCount: 0,
+            stopFollowingRequestCount: 0,
+            profileData: {
+                    profileUsername: "...",
+                    profileAvatar: 'https://gravatar.com/avatar/placeholder?s=128',
+                    isFollowing: false,
+                    counts: {postCount: "", followerCount: "", followingCount: ""}
+                }
     })
 
 
@@ -35,7 +52,11 @@ function Profile() {
                 // in GET request our cancelToken is the 2nd arguemnt. In POST request, it'd be the third.
                 // const response = await Axios.post(`/profile/${username}`, {token: appState.user.token})
                 const response = await Axios.post(`/profile/${username}`, {token: appState.user.token}, {cancelToken: ourRequest.token})
-                setProfileData(response.data)
+                // setProfileData(response.data)
+                //L63 use setState (Immer) instead of setProfileData (useState)
+                setState(draft => {
+                    draft.profileData = response.data
+                })
             } catch(e){
                 console.log("Error in Profile.js useEffect catch block was: ", e)
             }
@@ -47,32 +68,143 @@ function Profile() {
             ourRequest.cancel()
         }        
 
-    }, []) //empty array our way of saying, only run this function the very first time this component is rendered.
+    // }, []) //empty array our way of saying, only run this function the very first time this component is rendered.
+    }, [username]) //Add dependency of `username` so clicking on profile pic will load profile at L63 (18:20)
+
+//L63 (11:00) - 2nd useEffect to listen for change in state.startFollowingRequestCount: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19053508#overview
+    useEffect(() => {
+
+            if(state.startFollowingRequestCount){ //check that count greater than zero
+                        //loading to true
+                        setState(draft => {
+                            draft.followActionLoading = true
+                        })
+
+                        const ourRequest = Axios.CancelToken.source() //generates token that can be used
+
+                        async function fetchData(){
+                            try {
+
+                                const response = await Axios.post(`/addFollow/${state.profileData.profileUsername}`, {token: appState.user.token}, {cancelToken: ourRequest.token})
+                                // setProfileData(response.data)
+                                //L63 use setState (Immer) instead of setProfileData (useState)
+                                setState(draft => {
+                                    // draft.profileData = response.data
+                                    draft.profileData.isFollowing = true
+                                    //increment followers by one
+                                    draft.profileData.counts.followerCount++
+                                    draft.followActionLoading = false
+                                })
+                            } catch(e){
+                                console.log("Error in Profile.js useEffect for start followingcatch block was: ", e)
+                            }
+                        }
+
+                        fetchData()
+                        // LL49 (2:15) Setup arrow fn to clean up when this component (ViewSinglePost) is done running or "Unmounted": https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528070#overview
+                        return () => {
+                            ourRequest.cancel()
+                        }        
+            }
+    }, [state.startFollowingRequestCount])
+
+
+//L63 (16:00) - 3rd useEffect to watch state.stopFollowingRequestCount
+useEffect(() => {
+
+    if(state.stopFollowingRequestCount){ //check that count greater than zero
+                //loading to true
+                setState(draft => {
+                    draft.followActionLoading = true
+                })
+
+                const ourRequest = Axios.CancelToken.source() //generates token that can be used
+
+                async function fetchData(){
+                    try {
+
+                        const response = await Axios.post(`/removeFollow/${state.profileData.profileUsername}`, {token: appState.user.token}, {cancelToken: ourRequest.token})
+                        // setProfileData(response.data)
+                        //L63 use setState (Immer) instead of setProfileData (useState)
+                        setState(draft => {
+                            // draft.profileData = response.data
+                            draft.profileData.isFollowing = false
+                            //increment followers by one
+                            draft.profileData.counts.followerCount--
+                            draft.followActionLoading = false
+                        })
+                    } catch(e){
+                        console.log("Error in Profile.js useEffect catch block for stop following was: ", e)
+                    }
+                }
+
+                fetchData()
+                // LL49 (2:15) Setup arrow fn to clean up when this component (ViewSinglePost) is done running or "Unmounted": https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528070#overview
+                return () => {
+                    ourRequest.cancel()
+                }        
+    }
+}, [state.stopFollowingRequestCount])
+
+    function startFollowing() {
+        setState(draft => {
+            //mutate exact property interested in
+            draft.startFollowingRequestCount++
+        })
+    }
+
+    function stopFollowing() {
+        setState(draft => {
+            //mutate exact property interested in
+            draft.stopFollowingRequestCount++
+        })
+    }
+
 
   return (
     <Page title="Profile Screen">
 
         <h2>
             {/* <img className="avatar-small" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" /> */}
-            <img className="avatar-small" src={profileData.profileAvatar} /> 
+            {/* <img className="avatar-small" src={profileData.profileAvatar} />  L63 (5:20) */}
+            <img className="avatar-small" src={state.profileData.profileAvatar} /> 
                 {/* brad */}
-                {profileData.profileUsername}
-            <button className="btn btn-primary btn-sm ml-2">Follow <i className="fas fa-user-plus"></i></button>
+                {/* {profileData.profileUsername} */}
+                {state.profileData.profileUsername}
+
+            {/* Logged in to view AND not already following AND not your profile AND not loading '...' */}
+            {appState.loggedIn && !state.profileData.isFollowing && appState.user.username != state.profileData.profileUsername && state.profileData.profileUsername != '...' && (
+                    <button onClick={startFollowing} disabled={state.followActionLoading} className="btn btn-primary btn-sm ml-2">
+                        Follow <i className="fas fa-user-plus"></i>
+                    </button>
+            )}
+{/* Add unfollow button */}
+            {appState.loggedIn && state.profileData.isFollowing && appState.user.username != state.profileData.profileUsername && state.profileData.profileUsername != '...' && (
+                    <button onClick={stopFollowing} disabled={state.followActionLoading} className="btn btn-danger btn-sm ml-2">
+                        Unfollow <i className="fas fa-user-times"></i>
+                    </button>
+            )}
+
         </h2>
 
         <div className="profile-nav nav nav-tabs pt-2 mb-4">
             <a href="#" className="active nav-item nav-link">
             {/* Posts: 3 */}
-            Posts: {profileData.counts.postCount}
+            {/* Posts: {profileData.counts.postCount} */}
+            Posts: {state.profileData.counts.postCount}
             </a>
             <a href="#" className="nav-item nav-link">
             {/* Followers: 101 */}
 
-            Followers: {profileData.counts.followerCount}
+            {/* Followers: {profileData.counts.followerCount} */}
+            Followers: {state.profileData.counts.followerCount}
+
             </a>
             <a href="#" className="nav-item nav-link">
             {/* Following: 40 */}
-            Following: {profileData.counts.followingCount}
+            {/* Following: {profileData.counts.followingCount} */}
+            Following: {state.profileData.counts.followingCount}
+
             </a>
         </div>
 

@@ -39,7 +39,9 @@ function ProfilePosts() {
             ourRequest.cancel()
         }
 
-    }, [])
+    // }, []) LL63 (19:00) add username dependency so profile icon will upload: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19053508#overview
+    }, [username])
+
 
     // if (isLoading) return <div>Loading...</div>
     if (isLoading) return <LoadingDotsIcon />

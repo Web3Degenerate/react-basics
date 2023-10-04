@@ -76,7 +76,8 @@ function Search() {
                         console.log("useEffects delayed searchTerm value is: ", state.searchTerm)
                         //L60 (12:05) - send axios request to another useEffect to make clean up better. Just increment count here by 1
                         setState(draft => { draft.requestCount++ }); //Axios search useEffect watches for changes to requestCount.
-                    }, 3000)
+                    // }, 3000) //3 seconds
+                    }, 750)
 
                     //return clean up function - L60 (10:40)
                     return () => clearTimeout(delay)
@@ -155,12 +156,13 @@ function Search() {
             <div className={`live-search-results ` + (state.show == 'results' ? 'live-search-results--visible' : '')}>
 
 
+                    {Boolean(state.results.length) && ( //L62 (9:30) Boolean() so we don't display a number? 
                             <div className="list-group shadow-sm">
                                 <div className="list-group-item active">
                                     <strong>Search Results</strong> ({state.results.length} {state.results.length !== 1 ? "items" : "item"} found)
                                 </div>
 
-{/* L62 (2:40) map through search results post: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049988#overview  */}
+                                {/* L62 (2:40) map through search results post: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049988#overview  */}
                                 {state.results.map((post) => {
                                     const date = new Date(post.createdDate)
                                     const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
@@ -172,11 +174,11 @@ function Search() {
                                         </Link>
                                     )
 
-                                })
-
-                                }
+                                })}
                             </div>
+                    ) }
 
+                    {!Boolean(state.results.length) && <p className="alert alert-danger text-center shadow-sm"> Sorry, no posts match this search.</p>}
 
             </div>
 
