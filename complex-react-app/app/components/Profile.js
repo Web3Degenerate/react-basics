@@ -4,7 +4,7 @@
 import React, { useEffect, useContext } from "react"
 import Page from './Page'
 
-import {useParams} from 'react-router-dom'
+import {useParams, NavLink, Routes, Route } from 'react-router-dom' //NavLink, Routes, Route added in L64
 import Axios from 'axios'
 
 import StateContext from '../StateContext' //L45 (13:05): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505680#overview
@@ -12,6 +12,8 @@ import ProfilePosts from "./ProfilePosts"
 
 //L62 (2:30) add useImmer
 import { useImmer } from 'use-immer'
+// import ProfileFollowers from "./ProfileFollowers"
+import ProfileFollow from "./ProfileFollow"
 
 function Profile() {
 
@@ -188,27 +190,43 @@ useEffect(() => {
         </h2>
 
         <div className="profile-nav nav nav-tabs pt-2 mb-4">
-            <a href="#" className="active nav-item nav-link">
-            {/* Posts: 3 */}
-            {/* Posts: {profileData.counts.postCount} */}
-            Posts: {state.profileData.counts.postCount}
-            </a>
-            <a href="#" className="nav-item nav-link">
-            {/* Followers: 101 */}
 
-            {/* Followers: {profileData.counts.followerCount} */}
-            Followers: {state.profileData.counts.followerCount}
+            {/* L64 (2:20) change <a> links to <NavLinks> */}
+                {/* <a href="#" className="active nav-item nav-link"> */}
+    {/* If Profile.js component is rendered we know means /profile/username via main.js  */}
+    {/* end makes sure it is not active if one of the other links is active? (L64) (4:53) */}
+                <NavLink to="" end className="nav-item nav-link">
+                        {/* Posts: 3 */}
+                        {/* Posts: {profileData.counts.postCount} */}
+                        Posts: {state.profileData.counts.postCount}
+                </NavLink>
 
-            </a>
-            <a href="#" className="nav-item nav-link">
-            {/* Following: 40 */}
-            {/* Following: {profileData.counts.followingCount} */}
-            Following: {state.profileData.counts.followingCount}
+                <NavLink to="followers" className="nav-item nav-link">
+                    {/* Followers: 101 */}
+                    {/* Followers: {profileData.counts.followerCount} */}
+                    Followers: {state.profileData.counts.followerCount}
+                </NavLink>
 
-            </a>
+                <NavLink to="following" className="nav-item nav-link">
+                    {/* Following: 40 */}
+                    {/* Following: {profileData.counts.followingCount} */}
+                    Following: {state.profileData.counts.followingCount}
+                </NavLink>
         </div>
 
-        <ProfilePosts />
+            <Routes>
+                <Route path="" element={ <ProfilePosts /> } />
+                {/* <Route path="followers" element={ <ProfileFollowers /> } /> 
+                <Route path="following" element={ <ProfileFollowing /> } /> */}
+
+                <Route path="followers" element={ <ProfileFollow action="followers" /> } /> 
+                <Route path="following" element={ <ProfileFollow action="following" /> } />
+
+            </Routes>
+
+            {/* <ProfilePosts /> */}
+
+
 {/* Moved to X component in L46: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18505684#overview  */}
         {/* <div className="list-group">
             <a href="#" className="list-group-item list-group-item-action">
