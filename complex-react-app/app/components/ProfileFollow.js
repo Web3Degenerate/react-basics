@@ -65,12 +65,12 @@ function ProfileFollow(props) {
 
         
             {/* <p>There are no {props.action == 'following' ? "followers" : ''} for {username}. </p> */}
-        {!posts.length && isLoading == false && (          
-                props.action == 'following' && isLoading == false ? (
-                    <b>{username} is not following anyone.</b>
-                ) : (
-                    <b>There are no followers for {username}.</b>
-                )        
+        {!posts.length && (          
+                props.action == 'following' ? (
+                    <b>{username} is not following anyone.</b>              
+                ) : (                
+                    <b>There are no followers for {username}.</b>                 
+                )             
         )}
 
 
