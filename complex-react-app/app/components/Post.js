@@ -23,7 +23,9 @@ function Post(props) {
                 {/* <Link onClick={() => appDispatch({type: "closeSearch"})} key={post._id} to={`/post/${post._id}`} className="list-group-item list-group-item-action"> */}
                 
                 <img className="avatar-tiny" src={props.post.author.avatar} /> <strong>{props.post.title}</strong> {" "}
-                <span className="text-muted small"> by {props.post.author.username} on {dateFormatted} </span>
+                <span className="text-muted small"> 
+                    {!props.noAuthor && <> by {props.post.author.username} </>} on {dateFormatted} 
+                </span>
                 
             </Link>
         )

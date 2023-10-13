@@ -7,6 +7,9 @@ import Axios from 'axios'
 
 import LoadingDotsIcon from './LoadingDotsIcon' //Added in L48 (~4:05): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18528068#overview
 
+//L65 (16:30) Added Post.js component to handle the post query results table
+import Post from './Post'
+
 function ProfilePosts() {
 
     const {username} = useParams()
@@ -51,14 +54,18 @@ function ProfilePosts() {
     <div className="list-group">
 
         {posts.map((post) => {
-            const date = new Date(post.createdDate)
+
+    {/* L65 (16:30) replaced repeating code block below (Home.js, Search.js and this ProfilePosts.js) with <Post /> component and PROPS: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19053896?start=225#overview  */}
+    {/* L65 (~17th min) added noAuthor={true} prop so we don't repeat the same author over and over again when viewing a single user's posts */}
+           return <Post noAuthor={true} post={post} key={post._id} /> 
+            {/* const date = new Date(post.createdDate)
             const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
             return (
                 <Link key={post._id} to={`/post/${post._id}`} className="list-group-item list-group-item-action">
                     <img className="avatar-tiny" src={post.author.avatar} /> <strong>{post.title}</strong> {" "}
                     <span className="text-muted small">on {dateFormatted} </span>
                 </Link>
-            )
+            ) */}
         })}
         
 
