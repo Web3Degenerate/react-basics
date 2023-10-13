@@ -16,6 +16,10 @@ import Axios from 'axios';
 //L62 (4:20) import Link for mapped post results
 import {Link} from 'react-router-dom'
 
+//L65 (14:00) import Post component: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19053896?start=225#overview
+import Post from './Post'
+
+
 function Search() {
 
     const appDispatch = useContext(DispatchContext)
@@ -164,7 +168,12 @@ function Search() {
 
                                 {/* L62 (2:40) map through search results post: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049988#overview  */}
                                 {state.results.map((post) => {
-                                    const date = new Date(post.createdDate)
+
+                    {/* Replace with <Post /> component and PROPS in L65 (~14:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19053896?start=225#overview */}
+                                                {/* L65 (15:20) use onClick with code that closes the search overlay */}
+                                   return <Post post={post} key={post._id} onClick={() => appDispatch({type: "closeSearch"})} />
+                                   
+                                    {/* const date = new Date(post.createdDate)
                                     const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
                                     
                                     return(
@@ -172,7 +181,7 @@ function Search() {
                                             <img className="avatar-tiny" src={post.author.avatar} /> <strong>{post.title}</strong> {" "}
                                             <span className="text-muted small"> by {post.author.username} on {dateFormatted} </span>
                                         </Link>
-                                    )
+                                    ) */}
 
                                 })}
                             </div>

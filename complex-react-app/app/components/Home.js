@@ -1,4 +1,4 @@
-//Added in L36: (~2:00): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18264826#overview
+//Added in L36: (~2:00): https://www.udemy.com/course/react-for-the-c-of-us/learn/lecture/18264826#overview
 import React, { useEffect, useContext } from "react"
 import Page from './Page'
 
@@ -13,6 +13,9 @@ import LoadingDotsIcon from "./LoadingDotsIcon"
 
 import Axios from 'axios'
 import {Link} from 'react-router-dom'
+
+//L65 (~12th min) import Post.js component
+import Post from './Post'
 
 function Home() {
 
@@ -85,16 +88,11 @@ function Home() {
             {/* if your feed (posts from other users you follow) is not emptyu */}
             <h2 className="text-center mb-4">The Latest From Those You Follow</h2>
             <div className="list-group">
+                      {/* {state.feed.map((post) => { */}
+    {/* Pass (unique data), the actual current post object that map has looped to as a prop to the Post component and for performance reasons, pass it a key */}
                       {state.feed.map((post) => {
-                          const date = new Date(post.createdDate)
-                          const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
                           
-                          return(
-                              <Link onClick={() => appDispatch({type: "closeSearch"})} key={post._id} to={`/post/${post._id}`} className="list-group-item list-group-item-action">
-                                  <img className="avatar-tiny" src={post.author.avatar} /> <strong>{post.title}</strong> {" "}
-                                  <span className="text-muted small"> by {post.author.username} on {dateFormatted} </span>
-                              </Link>
-                          )
+                          return <Post post={post} key={post._id} />
 
                       })}
             </div>
