@@ -39,6 +39,9 @@ import Search from './components/Search'
 //Import installed react-transition-group for CSS transitions in L58 (2:23): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19002510#overview
 import { CSSTransition } from 'react-transition-group'
 
+//Imported Chat.js component in L66 (2:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19096866#overview
+import Chat from "./components/Chat"
+
 function Main(){
 
 // Added useReducer at L41 (1:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18391870#overview
@@ -136,7 +139,8 @@ function Main(){
                     <Search />
                 </CSSTransition>
 
-
+{/* L66 (3:00) Added Chat component */}
+                    <Chat />
                 <Footer />
 
             </BrowserRouter>

@@ -17,7 +17,8 @@ function Post(props) {
         const dateFormatted = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
         
         return(
-            <Link onClick={props.onClick} key={props.post._id} to={`/post/${props.post._id}`} className="list-group-item list-group-item-action">
+            <Link onClick={props.onClick} to={`/post/${props.post._id}`} className="list-group-item list-group-item-action">
+                {/* At the end of L65, mentions that we don't need a key here, because that is already when we are leveraging our Post component, a key is already provided in PROPS */}
                 {/* Later in L65 (~16th min) we added back the close search to link when calling this from Search.js (display table of post results) */}
                 {/* Don't need the onClick we imported from Search.js. INSTEAD just call PROPS.onClick to pull the closeSearch logic from Search.js */}
                 {/* <Link onClick={() => appDispatch({type: "closeSearch"})} key={post._id} to={`/post/${post._id}`} className="list-group-item list-group-item-action"> */}
