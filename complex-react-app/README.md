@@ -444,3 +444,19 @@ useEffect(() => {
   return () => clearTimeout(delay)
 }, [state.searchTerm])
 ```
+
+1. Southwest Schedule
+
+- Confirm October
+- Review November
+  - Nov Pickup if necessary
+  - Thanksgiving if necessary
+- Review December
+  - Dec Pickup if necessary
+  - Stupid Cows weekend if feasible
+
+2.
+
+3.  **Alchemy**
+
+- See [Alchemy Notify Webhooks](https://www.alchemy.com/webhooks)

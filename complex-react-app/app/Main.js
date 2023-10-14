@@ -56,7 +56,9 @@ function Main(){
             avatar: localStorage.getItem("complexappAvatar")
         },
         //L57 (5:05) add state for our Search Component: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
-        isSearchOpen: false
+        isSearchOpen: false,
+        //L66 (4:20): https://www.alchemy.com/webhooks
+        isChatOpen: false
     }
 
 // Call state draft b/c Immer in L43: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18418654#overview      
@@ -85,6 +87,13 @@ function Main(){
                 return
             case "closeSearch":
                 draft.isSearchOpen = false
+                return
+            //L66 (4:45) this case will be used for the Navbar chat icon
+            case "toggleChat":
+                draft.isChatOpen = !draft.isChatOpen
+                return
+            case "closeChat": 
+                draft.isChatOpen = false
                 return
         }
     }

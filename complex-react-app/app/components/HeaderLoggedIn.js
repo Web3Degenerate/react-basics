@@ -57,7 +57,8 @@ function HeaderLoggedIn(props) {
     {/* L58 (8:50) add React Tooltip */}
             <ReactTooltip place="bottom" id="search" className="custom-tooltip" />
 
-        {' '}<span data-tooltip-id="chat" data-tooltip-content="Chat" className="mr-2 header-chat-icon text-white">
+    {/* L66 (8:35) || onClick={() => alert("anonymous functions are cool")} */}
+        {' '}<span onClick={() => appDispatch({type: "toggleChat"}) }  data-tooltip-id="chat" data-tooltip-content="Chat" className="mr-2 header-chat-icon text-white">
                 <i className="fas fa-comment"></i>
                 <span className="chat-count-badge text-white"> </span>
             </span>
