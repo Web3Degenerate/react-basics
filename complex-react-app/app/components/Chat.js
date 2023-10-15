@@ -12,6 +12,10 @@ import DispatchContext from '../DispatchContext'
 //L67 (0:50) import immer to use for setting the state of the chat input text field: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102908#overview
 import { useImmer } from "use-immer"
 
+// L68 (2:50) import socket.io-client: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102912#overview
+import io from 'socket.io-client'
+const socket = io("http://localhost:8080") //pass it url that points to our server. Establishes connection b/t browser & backend server
+
 function Chat() {
 
     const appState = useContext(StateContext)
@@ -31,16 +35,21 @@ function Chat() {
 
 //LL66 (13:30) set up useEffect to focus the chat text input
     useEffect(() => {
-
         if(appState.isChatOpen){ //only if the chat was just opened
-
             //Then focus the text input
             // chatField.current.value = 
             chatField.current.focus()
         }
-
-
     }, [appState.isChatOpen])
+
+//L68 (5:40) set up 2nd useEffect to listen for 'chatFromServer' event the first time chat component renders: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102912#overview
+    useEffect(() => {
+        socket.on("chatFromServer", message => { //brad programmed server to emit 'chatFromServer'
+            setState(draft => {
+                draft.chatMessages.push(message)
+            })
+        }) 
+    }, [])    
 
 
 //L67 setup handleFieldChange (~2:10)
@@ -57,14 +66,20 @@ function Chat() {
     function handleSubmit(e) {
         e.preventDefault()
         // alert(`User has typed in: ${state.fieldValue}`)
+             
+        // L68 (1:20) (1) Send message to chat server:
+            // TWO WAY Communication: Open up a socket connection b/t browser and a server. 
+            // instead of axios, use socket.io
+        //L68 (4:10) name of event type 'chatFromBrowser'
+        socket.emit("chatFromBrowser", {message: state.fieldValue, token: appState.user.token}) //brad configured it to look for 'chatFromBrowser'
+                //server will broadcast message out to any other connected users. 
 
-        
-        
-        //clear chat text input after submit
-        setState(draft => {
-            // L67 (6:30) Send message to chat server and (2) Add message to state collection array of messages
-            draft.chatMessages.push({message: draft.fieldValue, username: appState.user.username, avatar: appState.user.avatar})
-            draft.fieldValue = ''
+        setState((draft) => {
+            // L67 (6:30) (2) Add message to state collection array of messages
+                draft.chatMessages.push({message: draft.fieldValue, username: appState.user.username, avatar: appState.user.avatar})
+
+            // L67 - clear out chat text input after submit
+                draft.fieldValue = ''
         })
     }
 
@@ -83,8 +98,8 @@ function Chat() {
         <div id="chat" className="chat-log">
 
         {/* L67 (8:35) loop through chat messages */}
+                {/* check which template to use */}
             {state.chatMessages.map((message, index) => {
-                //check which template to use
                 if (message.username == appState.user.username) {
                     return (
                         <div className="chat-self">
@@ -95,7 +110,7 @@ function Chat() {
                         </div>
                     )
                 } 
-                {/* else { */}
+               
                 return (
                     <div className="chat-other">
                             <a href="#">
@@ -104,14 +119,14 @@ function Chat() {
                             <div className="chat-message">
                                 <div className="chat-message-inner">
                                 <a href="#">
-                                    <strong>barksalot:</strong>
+                                    <strong>{message.username}: </strong>
                                 </a>
-                                {message.message}
+                                {message.message}                              
                                 </div>
                             </div>
                     </div>
                 )
-                {/* } */}
+               
             })}
 
                     

@@ -72,6 +72,10 @@ Spin up local environment with **npm run dev** in `/complex-react-app` and **npm
 
 - install with `npm i react-transition-group`
 
+11. Install the [socket.io-client package](https://www.npmjs.com/package/socket.io-client) in [L68 (2:20)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102912#overview)
+
+- install with `npm i socket.io-client`
+
 ## VS Code Snippet
 
 1. Open the **command palette** with `CTRL + SHIFT + P`
@@ -457,6 +461,6 @@ useEffect(() => {
 
 2.
 
-3.  **Alchemy**
+3. **Alchemy**
 
 - See [Alchemy Notify Webhooks](https://www.alchemy.com/webhooks)
