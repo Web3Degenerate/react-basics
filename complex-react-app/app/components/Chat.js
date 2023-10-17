@@ -16,6 +16,10 @@ import { useImmer } from "use-immer"
 import io from 'socket.io-client'
 const socket = io("http://localhost:8080") //pass it url that points to our server. Establishes connection b/t browser & backend server
 
+// L69 (1:15) add Link to click on user in chat box and see their profile
+import { Link } from 'react-router-dom'
+
+
 function Chat() {
 
     const appState = useContext(StateContext)
@@ -25,6 +29,9 @@ function Chat() {
 // (1) Ref is like a box we can hold a value in, but unlike STATE we are allowed to direclty mutate it.
 // (2) Also, react will not re-render things when the Ref changes. 
     const chatField = useRef(null)
+
+// L69 (5:20) set up chatLog useRef: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19125232#overview
+    const chatLog = useRef(null)
 
 // L67 (1:09) set up immer state: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102908#overview   
     const [state, setState] = useImmer({
@@ -51,6 +58,12 @@ function Chat() {
         }) 
     }, [])    
 
+
+//L69 (6:20): Set up 3rd useEffect to watch array of messages (chatLog useRef) and focus on the last one: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19125232#overview
+    useEffect(() => {
+        //scrollTop property of browser, set to current height
+        chatLog.current.scrollTop = chatLog.current.scrollHeight
+    }, [state.chatMessages])    
 
 //L67 setup handleFieldChange (~2:10)
     function handleFieldChange(e){
@@ -95,14 +108,16 @@ function Chat() {
             <i className="fas fa-times-circle"></i>
             </span>
         </div>
-        <div id="chat" className="chat-log">
+
+{/* L69 (5:10) add useRef on chat-log div to focus on most recent chat: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19125232#overview */}
+    <div id="chat" className="chat-log" ref={chatLog} >
 
         {/* L67 (8:35) loop through chat messages */}
                 {/* check which template to use */}
             {state.chatMessages.map((message, index) => {
                 if (message.username == appState.user.username) {
                     return (
-                        <div className="chat-self">
+                        <div key={index} className="chat-self">
                             <div className="chat-message">
                                 <div className="chat-message-inner">{message.message}</div>
                             </div>
@@ -112,15 +127,16 @@ function Chat() {
                 } 
                
                 return (
-                    <div className="chat-other">
-                            <a href="#">
+                    <div key={index} className="chat-other">
+                            <Link to={`/profile/${message.username}`}>
                                 <img className="avatar-tiny" src={message.avatar} />
-                            </a>
+                            </Link>
+
                             <div className="chat-message">
                                 <div className="chat-message-inner">
-                                <a href="#">
+                                <Link to={`/profile/${message.username}`}>
                                     <strong>{message.username}: </strong>
-                                </a>
+                                </Link>
                                 {message.message}                              
                                 </div>
                             </div>
@@ -132,7 +148,8 @@ function Chat() {
                     
 
                     
-        </div>
+    </div>
+
         {/* L67 (3:30) set up onSubmit handler */}
         <form onSubmit={handleSubmit} id="chatForm" className="chat-form border-top">
             {/* ref set up in L66. onChange set up in L67 */}
