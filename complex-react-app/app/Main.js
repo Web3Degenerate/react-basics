@@ -58,7 +58,9 @@ function Main(){
         //L57 (5:05) add state for our Search Component: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
         isSearchOpen: false,
         //L66 (4:20): https://www.alchemy.com/webhooks
-        isChatOpen: false
+        isChatOpen: false,
+        //L69 (8:50) add unread chat count to show unread chat # in Navbar icon
+        unreadChatCount: 0
     }
 
 // Call state draft b/c Immer in L43: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18418654#overview      
@@ -94,6 +96,13 @@ function Main(){
                 return
             case "closeChat": 
                 draft.isChatOpen = false
+                return
+            //L69 (9:20) add case for incrementing chat count: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19125232#overview
+            case "incrementUnreadChatCount":
+                draft.unreadChatCount++
+                return
+            case "clearUnreadChatCount":
+                draft.unreadChatCount = 0
                 return
         }
     }
