@@ -63,6 +63,9 @@ function Chat() {
     useEffect(() => {
         //scrollTop property of browser, set to current height
         chatLog.current.scrollTop = chatLog.current.scrollHeight
+        if(state.chatMessages.length && !appState.isChatOpen){
+            appDispatch({type: "incrementUnreadChatCount"})
+        }
     }, [state.chatMessages])    
 
 //L67 setup handleFieldChange (~2:10)
