@@ -46,6 +46,8 @@ function Chat() {
             //Then focus the text input
             // chatField.current.value = 
             chatField.current.focus()
+//L69 (~12:30) - set up Main.js' ourReducer function clearUnreadChatMessages: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19125232#overview
+            appDispatch({type: "clearUnreadChatCount"})
         }
     }, [appState.isChatOpen])
 
@@ -63,6 +65,7 @@ function Chat() {
     useEffect(() => {
         //scrollTop property of browser, set to current height
         chatLog.current.scrollTop = chatLog.current.scrollHeight
+//L69 (~11:30) Set up ourReducer case incrementUnreadChatCount in Main.js and run it here, when chat length 1+ and chat is open: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19125232#overview
         if(state.chatMessages.length && !appState.isChatOpen){
             appDispatch({type: "incrementUnreadChatCount"})
         }
