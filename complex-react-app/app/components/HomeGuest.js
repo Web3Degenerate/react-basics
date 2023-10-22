@@ -5,9 +5,10 @@ import Page from './Page'
 
 import Axios from 'axios'
 
+//L70 (2:40) - Add useImmerReducer
+import { useImmerReducer } from 'use-immer'
+
 function HomeGuest() {
-
-
 
 //From update note: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19689368#overview
     // async function handleSubmit(e) {
@@ -20,26 +21,65 @@ function HomeGuest() {
     //     }
     // }
 
-    
-    const [username, setUsername] = useState()
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState()
 
-    async function handleSubmit(e){
+//L70 (1:40) replaced useState with client-side validation: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
+    // const [username, setUsername] = useState()
+    // const [email, setEmail] = useState()
+    // const [password, setPassword] = useState()
+
+//L70 - useImmer reducer for our register new user state management: 
+    const initialState = {
+        username: {
+           value: "",
+           hasErrors: false, 
+           message: "",
+           isUnique: false, //check username unique
+            checkCount: 0
+        },
+        email: {
+            value: "",
+            hasErrors: false, 
+            message: "",
+            isUnique: false, //check email unique
+            checkCount: 0
+         }, 
+         password: {
+            value: "",
+            hasErrors: false, 
+            message: ""
+         },
+         submitCount: 0
+    } 
+
+//L70 (5:10) add in our reducer: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
+    function ourReducer(draft, action){
+        switch (action.type) {
+            case "usernameImmediately": 
+                return
+            case "usernameAfterDelay":
+                //delayed verification, like username requried length, wait 800ms after user stopped typing
+                return
+        }
+    }
+
+    // async function handleSubmit(e){
+    function handleSubmit(e){
         e.preventDefault()
-            try {
-                // Axios.post(URL SEND Request, ANY DATA SEND TO SERVER)
-                // await Axios.post("http://localhost:8080/register", {username: "Howard", email: "Howard@test.com", password: "qwerty123456" })
-                // await Axios.post("http://localhost:8080/register", {username: username, email: email, password: password })
 
-                //L37 (~10th min) set baseURL in Main.js
-                // await Axios.post("http://localhost:8080/register", {username, email, password })
-                await Axios.post("/register", {username, email, password })
+        //L 70 (1:50) replaced old try and catch block: 
+            // try {
+                        // Axios.post(URL SEND Request, ANY DATA SEND TO SERVER)
+                        // await Axios.post("http://localhost:8080/register", {username: "Howard", email: "Howard@test.com", password: "qwerty123456" })
+                        // await Axios.post("http://localhost:8080/register", {username: username, email: email, password: password })
 
-                console.log("User was successfully created in handleSubmit")
-            } catch (error) {
-                console.log("Error from handleSubmit is ",error.response.data)
-            }
+                        //L37 (~10th min) set baseURL in Main.js
+                        // await Axios.post("http://localhost:8080/register", {username, email, password })
+            //     await Axios.post("/register", {username, email, password })
+
+            //     console.log("User was successfully created in handleSubmit")
+            // } catch (error) {
+            //     console.log("Error from handleSubmit is ",error.response.data)
+            // }
     }
 
 
