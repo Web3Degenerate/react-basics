@@ -8,6 +8,9 @@ import Axios from 'axios'
 //L70 (2:40) - Add useImmerReducer
 import { useImmerReducer } from 'use-immer'
 
+//L70 (14:40) - import CSS Transitio0n Group from react-transition-group: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
+import { CSSTransition } from 'react-transition-group'
+
 function HomeGuest() {
 
 //From update note: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19689368#overview
@@ -55,12 +58,43 @@ function HomeGuest() {
     function ourReducer(draft, action){
         switch (action.type) {
             case "usernameImmediately": 
+            //store value in state (L70 11:50)
+                draft.username.hasErrors = false
+                draft.username.value = action.value
+                if (draft.username.value.length > 30) {
+                    draft.username.hasErrors = true
+                    draft.username.message = "Username cannot exceed 30 characters."
+                }
+
                 return
             case "usernameAfterDelay":
                 //delayed verification, like username requried length, wait 800ms after user stopped typing
                 return
+            case "usernameUniqueResults": 
+                return
+            case "emailImmediately": 
+                draft.email.hasErrors = false
+                draft.email.value = action.value
+                return
+            case "emailAfterDelay": 
+                return 
+            case "emailUniqueResults": 
+                return
+            case "passwordImmediately": 
+                draft.password.hasErrors = false
+                draft.password.value = action.value
+                return
+            case "passwordAfterDelay": 
+                return 
+            case "submitForm": 
+                return
         }
     }
+
+// L70 (9:50) set up our dispatch: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
+    // const [state, dispatch] = useImmerReducer(reducer, initialState)
+    const [state, dispatch] = useImmerReducer()
+
 
     // async function handleSubmit(e){
     function handleSubmit(e){
@@ -99,19 +133,27 @@ function HomeGuest() {
                         <label htmlFor="username-register" className="text-muted mb-1">
                             <small>Username</small>
                         </label>
-                        <input onChange={e => setUsername(e.target.value)} id="username-register" name="username" className="form-control" type="text" placeholder="Pick a username" autoComplete="off" />
+                        {/* L70 (9:20) update onChange: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview */}
+                            {/* <input onChange={e => setUsername(e.target.value)} id="username-register" name="username" className="form-control" type="text" placeholder="Pick a username" autoComplete="off" /> */}
+                            <input onChange={e => dispatch({type: "usernameImmediately", value: e.target.value})} id="username-register" name="username" className="form-control" type="text" placeholder="Pick a username" autoComplete="off" />
+                        {/* L70 (15:00) - add CSS Transition group to display error message: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview */}
+                            <CSSTransition in={state.username.hasErrors} timeout={330} classNames="liveValidateMessage" unmountOnExit>
+                              <div className="alert alert-danger small liveValidateMessage">{state.username.message}</div>  
+                            </CSSTransition>
                         </div>
                         <div className="form-group">
                         <label htmlFor="email-register" className="text-muted mb-1">
                             <small>Email</small>
                         </label>
-                        <input onChange={e => setEmail(e.target.value)} id="email-register" name="email" className="form-control" type="text" placeholder="you@example.com" autoComplete="off" />
+                        {/* L70 (11:00) update email onChange to use dispatch:   */}
+                        <input onChange={e => dispatch({type: "emailImmediately", value: e.target.value})} id="email-register" name="email" className="form-control" type="text" placeholder="you@example.com" autoComplete="off" />
                         </div>
                         <div className="form-group">
                         <label htmlFor="password-register" className="text-muted mb-1">
                             <small>Password</small>
                         </label>
-                        <input onChange={e => setPassword(e.target.value)} id="password-register" name="password" className="form-control" type="password" placeholder="Create a password" />
+                        {/* L70 (11:20) update password onChange to use dispatch */}
+                        <input onChange={e => dispatch({type: "passwordImmediately", value: e.target.value})} id="password-register" name="password" className="form-control" type="password" placeholder="Create a password" />
                         </div>
                         <button type="submit" className="py-3 mt-4 btn btn-lg btn-success btn-block">
                         Sign up for an AWFFL Account
