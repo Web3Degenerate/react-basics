@@ -65,6 +65,9 @@ function HomeGuest() {
                     draft.username.hasErrors = true
                     draft.username.message = "Username cannot exceed 30 characters."
                 }
+                if (draft.username.value && !/^([a-zA-Z0-9]+)%/.test(draft.username.value)){
+                    draft.username.hasErrors = true
+                }
 
                 return
             case "usernameAfterDelay":
@@ -156,7 +159,7 @@ function HomeGuest() {
                         <input onChange={e => dispatch({type: "passwordImmediately", value: e.target.value})} id="password-register" name="password" className="form-control" type="password" placeholder="Create a password" />
                         </div>
                         <button type="submit" className="py-3 mt-4 btn btn-lg btn-success btn-block">
-                        Sign up for an AWFFL Account
+                        Sign up for an ACME Health Account
                         </button>
                     </form>
                     </div>
