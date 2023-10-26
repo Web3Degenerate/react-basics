@@ -33,17 +33,17 @@ function HomeGuest() {
 //L70 - useImmer reducer for our register new user state management: 
     const initialState = {
         username: {
-           value: "",
-           hasErrors: false, 
-           message: "",
-           isUnique: false, //check username unique
+            value: "",
+            hasErrors: false, 
+            message: "",
+            isUnique: false,
             checkCount: 0
         },
         email: {
             value: "",
             hasErrors: false, 
             message: "",
-            isUnique: false, //check email unique
+            isUnique: false,
             checkCount: 0
          }, 
          password: {
@@ -65,8 +65,12 @@ function HomeGuest() {
                     draft.username.hasErrors = true
                     draft.username.message = "Username cannot exceed 30 characters."
                 }
-                if (draft.username.value && !/^([a-zA-Z0-9]+)%/.test(draft.username.value)){
+                //Check if the username contains non-alpha numeric characters:
+                                                // .test() metod from regex returns value true/false (L70 (19:00))
+                // The Username error message kept triggering because we had a '%' instead of a '$' sign
+                if (draft.username.value && !/^([a-zA-Z0-9]+)$/.test(draft.username.value)){
                     draft.username.hasErrors = true
+                    draft.username.message = "Username can only contain letters and numbers."
                 }
 
                 return
@@ -96,8 +100,10 @@ function HomeGuest() {
 
 // L70 (9:50) set up our dispatch: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
     // const [state, dispatch] = useImmerReducer(reducer, initialState)
-    const [state, dispatch] = useImmerReducer()
 
+//**************** FORGOT TO PASS ourReducer, initialState in L70 (10:05) *******************************************//
+                //THIS allows us to actually use dispatch in our registration form: 
+    const [state, dispatch] = useImmerReducer(ourReducer, initialState) 
 
     // async function handleSubmit(e){
     function handleSubmit(e){
