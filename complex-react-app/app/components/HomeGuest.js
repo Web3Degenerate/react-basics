@@ -25,11 +25,25 @@ function HomeGuest() {
     // }
 
 
+
+//L71 (1:20) set up useEffect to watch for changes to initialState.username [state.username.value] 
+// to check that username is not less than 3 chars
+// L71: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview
+    useEffect(() => {
+       //make sure this is not blank (not when component initally renders, only when change ie user types username) 
+       if(state.username.value){
+        // const delay = setTimeout(function to run, miliseconds to wait)
+        // Then in REDCUER define what happens for type 'usernameAfterDelay'
+        const delay = setTimeout(() => dispatch({type: "usernameAfterDelay"}), 800) //L71 (3:23) don't have to use {dispatch} if just one statement.
+
+        return () => clearTimeout(delay) //cleanup function, clear our setTimeout
+       }
+    }, [state.username.value])
+
 //L70 (1:40) replaced useState with client-side validation: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
     // const [username, setUsername] = useState()
     // const [email, setEmail] = useState()
     // const [password, setPassword] = useState()
-
 //L70 - useImmer reducer for our register new user state management: 
     const initialState = {
         username: {
@@ -76,6 +90,11 @@ function HomeGuest() {
                 return
             case "usernameAfterDelay":
                 //delayed verification, like username requried length, wait 800ms after user stopped typing
+                //Check if the username is less than 3 characters long
+                if (draft.username.value.length < 3) {
+                    draft.username.hasErrors = true
+                    draft.username.message = "Username can not be less than 3 characters."
+                }
                 return
             case "usernameUniqueResults": 
                 return
