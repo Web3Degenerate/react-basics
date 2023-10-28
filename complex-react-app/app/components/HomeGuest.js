@@ -95,8 +95,21 @@ function HomeGuest() {
                     draft.username.hasErrors = true
                     draft.username.message = "Username can not be less than 3 characters."
                 }
+                //Don't check databse for duplicate if the username is not valid
+                if(!draft.hasErrors) {
+                    draft.username.checkCount++ //L71 (6:24) set up useEffect to watch for this increment.
+                }
                 return
             case "usernameUniqueResults": 
+                if(action.value){ 
+                    //true means username already exists
+                    draft.username.hasErrors = true
+                    draft.username.isUnique = false
+                    draft.username.message = 'Sorry, that username is already in use. Please create another one.'
+                }else{
+                    //false means username does not already exist and may be used. 
+                    draft.username.isUnique = true
+                }
                 return
             case "emailImmediately": 
                 draft.email.hasErrors = false
@@ -123,6 +136,40 @@ function HomeGuest() {
 //**************** FORGOT TO PASS ourReducer, initialState in L70 (10:05) *******************************************//
                 //THIS allows us to actually use dispatch in our registration form: 
     const [state, dispatch] = useImmerReducer(ourReducer, initialState) 
+
+
+
+// L71 (7:16) - Set up useEffect to trigger checking that userName is unique in our databse
+// => Borrowed From Search.js which ran from L60 (12:55) - second useEffect that listens for changes to requestCount
+useEffect(() => {
+    if (state.username.checkCount){ //at least 1
+        // Send axios request here in L61
+        const ourRequest = Axios.CancelToken.source()
+
+        async function fetchResults(){
+            try {
+                //Added L61 (~3:40): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049978#overview
+                // Updated L71 (8:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview
+                const response = await Axios.post("/doesUsernameExist", { username: state.username.value }, {cancelToken: ourRequest.token})
+                console.log("Search.js mongoDB results from fetchResults was: ",response.data)
+                
+                //Call dispatch, case `usernameUniqueResults`, server responds either true/false. Give this to our redcuer.
+                dispatch({type: "usernameUniqueResults", value: response.data})
+
+            } catch(e) {
+                console.log("There was a problem in Search.js axios useEffect() or the request was cancelled",e)
+            }
+        }
+        //call our async fn
+        fetchResults()
+        //clean up 
+        return () => ourRequest.cancel()
+        
+    }
+}, [state.username.checkCount])
+
+
+
 
     // async function handleSubmit(e){
     function handleSubmit(e){
