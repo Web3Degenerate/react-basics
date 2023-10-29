@@ -84,7 +84,8 @@ function HomeGuest() {
                     draft.username.message = "Username can not be less than 3 characters."
                 }
                 //Don't check databse for duplicate if the username is not valid
-                if(!draft.hasErrors) {
+                // if(!draft.hasErrors) { //Per L72 Note, !draft.username.hasErrors: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/23016612#overview
+                if(!draft.username.hasErrors) {
                     draft.username.checkCount++ //L71 (6:24) set up useEffect to watch for this increment.
                 }
                 return
@@ -130,8 +131,17 @@ function HomeGuest() {
             case "passwordImmediately": 
                 draft.password.hasErrors = false
                 draft.password.value = action.value
+                if(draft.password.value.length > 50){
+                    draft.password.hasErrors = true
+                    draft.password.message = "Password cannot exceed 50 characters."
+                }
                 return
             case "passwordAfterDelay": 
+                // check minimum password length: 
+                if(draft.password.value.length < 12){
+                    draft.password.hasErrors = true
+                    draft.password.message = "Password must be at least 12 characters."
+                }
                 return 
             case "submitForm": 
                 return
@@ -253,6 +263,21 @@ useEffect(() => {
     // async function handleSubmit(e){
     function handleSubmit(e){
         e.preventDefault()
+// L73 (0:30) Add in our rules from our dispatch: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19180030#overview
+    //username
+        dispatch({type: "usernameImmediately", value: state.username.value})
+        dispatch({type: "usernameAfterDelay", value: state.username.value})
+    
+    //email
+        dispatch({type: "emailImmediately", value: state.email.value})
+        dispatch({type: "emailAfterDelay", value: state.email.value})        
+
+    //password
+        dispatch({type: "passwordImmediately", value: state.password.value})
+        dispatch({type: "passwordAfterDelay", value: state.password.value}) 
+
+    //submit form
+        dispatch({type: "submitForm"})    
 
         //L 70 (1:50) replaced old try and catch block: 
             // try {
@@ -300,14 +325,23 @@ useEffect(() => {
                             <small>Email</small>
                         </label>
                         {/* L70 (11:00) update email onChange to use dispatch:   */}
-                        <input onChange={e => dispatch({type: "emailImmediately", value: e.target.value})} id="email-register" name="email" className="form-control" type="text" placeholder="you@example.com" autoComplete="off" />
+                            <input onChange={e => dispatch({type: "emailImmediately", value: e.target.value})} id="email-register" name="email" className="form-control" type="text" placeholder="you@example.com" autoComplete="off" />
+                    {/* L71 (17:00) - Add CSS Transition for Email: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview */}
+                            <CSSTransition in={state.email.hasErrors} timeout={330} classNames="liveValidateMessage" unmountOnExit>
+                              <div className="alert alert-danger small liveValidateMessage">{state.email.message}</div>  
+                            </CSSTransition>                        
+                        
                         </div>
                         <div className="form-group">
                         <label htmlFor="password-register" className="text-muted mb-1">
                             <small>Password</small>
                         </label>
                         {/* L70 (11:20) update password onChange to use dispatch */}
-                        <input onChange={e => dispatch({type: "passwordImmediately", value: e.target.value})} id="password-register" name="password" className="form-control" type="password" placeholder="Create a password" />
+                            <input onChange={e => dispatch({type: "passwordImmediately", value: e.target.value})} id="password-register" name="password" className="form-control" type="password" placeholder="Create a password" />
+                    {/* L71 (17:20) - Add CSS Transition for Email: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview */}
+                            <CSSTransition in={state.password.hasErrors} timeout={330} classNames="liveValidateMessage" unmountOnExit>
+                              <div className="alert alert-danger small liveValidateMessage">{state.password.message}</div>  
+                            </CSSTransition>                       
                         </div>
                         <button type="submit" className="py-3 mt-4 btn btn-lg btn-success btn-block">
                         Sign up for an ACME Health Account
