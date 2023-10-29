@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 
 // import Container from './Container'  // move to page L23 (~10:18)
 import Page from './Page'
@@ -26,19 +26,7 @@ function HomeGuest() {
 
 
 
-//L71 (1:20) set up useEffect to watch for changes to initialState.username [state.username.value] 
-// to check that username is not less than 3 chars
-// L71: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview
-    useEffect(() => {
-       //make sure this is not blank (not when component initally renders, only when change ie user types username) 
-       if(state.username.value){
-        // const delay = setTimeout(function to run, miliseconds to wait)
-        // Then in REDCUER define what happens for type 'usernameAfterDelay'
-        const delay = setTimeout(() => dispatch({type: "usernameAfterDelay"}), 800) //L71 (3:23) don't have to use {dispatch} if just one statement.
 
-        return () => clearTimeout(delay) //cleanup function, clear our setTimeout
-       }
-    }, [state.username.value])
 
 //L70 (1:40) replaced useState with client-side validation: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
     // const [username, setUsername] = useState()
@@ -115,9 +103,29 @@ function HomeGuest() {
                 draft.email.hasErrors = false
                 draft.email.value = action.value
                 return
-            case "emailAfterDelay": 
+            case "emailAfterDelay":
+                // L71 (12:30)
+                if(!/^\S+@\S+$/.test(draft.email.value)){ //if string text not match basic pattern for email
+                    draft.email.hasErrors = true
+                    draft.email.message = "You must provide a valid email address."
+                }
+                // L71 (12:55) - check if email address is unique
+                if(!draft.email.hasErrors){ //If there are no errors with the provided email address
+                    //Increment the email checkCount
+                    draft.email.checkCount++ // L71 (13:20) set up useEffect to watch for `draft.email.checkCount++`
+                }
                 return 
             case "emailUniqueResults": 
+                // L71 (14:30) After setting up email useEffect, display non-unique email error here: 
+                if(action.value){ //whatever server sends back, true or false
+                    //true means username already exists
+                    draft.email.hasErrors = true
+                    draft.email.isUnique = false
+                    draft.email.message = 'Sorry, that email is already being use. Please use another one.'
+                }else{
+                    //false means email does not already exist and may be used. 
+                    draft.email.isUnique = true
+                }            
                 return
             case "passwordImmediately": 
                 draft.password.hasErrors = false
@@ -138,6 +146,24 @@ function HomeGuest() {
     const [state, dispatch] = useImmerReducer(ourReducer, initialState) 
 
 
+//******************* MUST HAVE useEffect HERE, AFTER the (1) initialState, (2) ourReducer, (3) const [state, dispatch]
+// ****************** otherwise we get error, 'cannot initialize state before...' */
+
+//L71 (1:20) set up useEffect to watch for changes to initialState.username [state.username.value] 
+// to check that username is not less than 3 chars
+// L71: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview
+useEffect(() => {
+    //make sure this is not blank (not when component initally renders, only when change ie user types username) 
+    if(state.username.value){
+     // const delay = setTimeout(function to run, miliseconds to wait)
+     // Then in REDCUER define what happens for type 'usernameAfterDelay'
+     const delay = setTimeout(() => dispatch({type: "usernameAfterDelay"}), 800) //L71 (3:23) don't have to use {dispatch} if just one statement.
+
+     return () => clearTimeout(delay) //cleanup function, clear our setTimeout
+    }
+ }, [state.username.value])
+
+
 
 // L71 (7:16) - Set up useEffect to trigger checking that userName is unique in our databse
 // => Borrowed From Search.js which ran from L60 (12:55) - second useEffect that listens for changes to requestCount
@@ -151,13 +177,13 @@ useEffect(() => {
                 //Added L61 (~3:40): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049978#overview
                 // Updated L71 (8:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview
                 const response = await Axios.post("/doesUsernameExist", { username: state.username.value }, {cancelToken: ourRequest.token})
-                console.log("Search.js mongoDB results from fetchResults was: ",response.data)
+                console.log("HomeGuest.js mongoDB results from fetchResults useEffect was: ",response.data)
                 
                 //Call dispatch, case `usernameUniqueResults`, server responds either true/false. Give this to our redcuer.
                 dispatch({type: "usernameUniqueResults", value: response.data})
 
             } catch(e) {
-                console.log("There was a problem in Search.js axios useEffect() or the request was cancelled",e)
+                console.log("There was a problem in HomeGuest.js axios fetchResults state.username.email useEffect() or the request was cancelled",e)
             }
         }
         //call our async fn
@@ -169,6 +195,59 @@ useEffect(() => {
 }, [state.username.checkCount])
 
 
+// L71 (13:40) - Set up useEffect to trigger checking that email is unique in our databse
+// => Borrowed From username useEffect above
+useEffect(() => {
+    if (state.email.checkCount){ //at least 1
+        // Send axios request here in L61
+        const ourRequest = Axios.CancelToken.source()
+
+        async function fetchResults(){
+            try {
+                //Added L61 (~3:40): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049978#overview
+                // Updated L71 (8:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview
+                const response = await Axios.post("/doesEmailExist", { email: state.email.value }, {cancelToken: ourRequest.token})
+                console.log("HomeGuest.js mongoDB results from fetchResults state.email.checkCount useEffect was: ",response.data)
+                
+                //Call dispatch, case `emailUniqueResults`, server responds either true/false. Give this to our redcuer.
+                dispatch({type: "emailUniqueResults", value: response.data})
+
+            } catch(e) {
+                console.log("There was a problem in HomeGuest.js axios fetchResults useEffect() or the request was cancelled",e)
+            }
+        }
+        //call our async fn
+        fetchResults()
+        //clean up 
+        return () => ourRequest.cancel()
+        
+    }
+}, [state.email.checkCount])
+
+
+// L71 (10:50) Third useEffect to handle Email reducer case: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview
+    // useEffect(() =>{},[])
+    useEffect(() => {
+        if(state.email.value){
+         // const delay = setTimeout(function to run, miliseconds to wait)
+         // Then in REDCUER define what happens for type 'emailAfterDelay'
+         const delay = setTimeout(() => dispatch({type: "emailAfterDelay"}), 800) //L71 (3:23) don't have to use {dispatch} if just one statement.
+    
+         return () => clearTimeout(delay) //cleanup function, clear our setTimeout
+        }
+     }, [state.email.value])
+
+  
+// L71 (11:10) - Fourth useEffect to handle Password After Delay reucer case
+    useEffect(() => {
+        if(state.password.value){
+        // const delay = setTimeout(function to run, miliseconds to wait)
+        // Then in REDCUER define what happens for type 'passwordAfterDelay'
+        const delay = setTimeout(() => dispatch({type: "passwordAfterDelay"}), 800) //L71 (3:23) don't have to use {dispatch} if just one statement.
+
+        return () => clearTimeout(delay) //cleanup function, clear our setTimeout
+        }
+    }, [state.password.value])       
 
 
     // async function handleSubmit(e){
