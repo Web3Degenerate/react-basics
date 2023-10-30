@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useContext} from 'react'
 
 // import Container from './Container'  // move to page L23 (~10:18)
 import Page from './Page'
@@ -8,10 +8,17 @@ import Axios from 'axios'
 //L70 (2:40) - Add useImmerReducer
 import { useImmerReducer } from 'use-immer'
 
-//L70 (14:40) - import CSS Transitio0n Group from react-transition-group: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
+//L70 (14:40) - import CSS Transition Group from react-transition-group: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153110#overview
 import { CSSTransition } from 'react-transition-group'
 
+//L73 (7:10) - import app-wide dispatch to log in newly created user and show flash message after initial reigistration: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19180030#overview
+// Don't forget to import 'useContext' from 'react' above.
+import DispatchContext from '../DispatchContext'
+
 function HomeGuest() {
+
+//L73 (7:35) - Finally set up appDispatch via useContext:L 
+    const appDispatch = useContext(DispatchContext)
 
 //From update note: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19689368#overview
     // async function handleSubmit(e) {
@@ -85,7 +92,9 @@ function HomeGuest() {
                 }
                 //Don't check databse for duplicate if the username is not valid
                 // if(!draft.hasErrors) { //Per L72 Note, !draft.username.hasErrors: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/23016612#overview
-                if(!draft.username.hasErrors) {
+                    // if(!draft.username.hasErrors) {
+                //L73 (2:05) - Add condition to check for noRequest, so don't check if isUnique if just submitting empty form
+                if(!draft.username.hasErrors && !action.noRequest) { //check noRequest is false
                     draft.username.checkCount++ //L71 (6:24) set up useEffect to watch for this increment.
                 }
                 return
@@ -111,7 +120,9 @@ function HomeGuest() {
                     draft.email.message = "You must provide a valid email address."
                 }
                 // L71 (12:55) - check if email address is unique
-                if(!draft.email.hasErrors){ //If there are no errors with the provided email address
+                    // if(!draft.email.hasErrors){ //If there are no errors with the provided email address
+                //L73 (3:05) - Add condition to check for noRequest, so don't check if isUnique if just submitting empty form
+                if(!draft.username.hasErrors && !action.noRequest) { //check noRequest is false
                     //Increment the email checkCount
                     draft.email.checkCount++ // L71 (13:20) set up useEffect to watch for `draft.email.checkCount++`
                 }
@@ -144,6 +155,11 @@ function HomeGuest() {
                 }
                 return 
             case "submitForm": 
+                //L73 (3:30) - submit form to server if we are happy with the input fields: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19180030#overview
+                //No fields have errors. username and email are unique. password has no errors
+                if(!draft.username.hasErrors && draft.username.isUnique && !draft.email.hasErrors && draft.email.isUnique && !draft.password.hasErrors){
+                    draft.submitCount++ //then set up useEffect to listen for this L73 (4:20)
+                }
                 return
         }
     }
@@ -235,6 +251,41 @@ useEffect(() => {
 }, [state.email.checkCount])
 
 
+// L73 (4:40) - Set up useEffect to listen for submitCount: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19180030#overview
+// => Borrowed From above
+useEffect(() => {
+    if (state.submitCount){ //at least 1
+        // Send axios request here in L61
+        const ourRequest = Axios.CancelToken.source()
+
+        async function fetchResults(){
+            try {
+                //Added L61 (~3:40): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049978#overview
+                // Updated L73 (5:10): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19180030#overview
+                    //Give it all three values, username, email and password: 
+                const response = await Axios.post("/register", { username: state.username.value, email: state.email.value, password: state.password.value }, {cancelToken: ourRequest.token})
+                console.log("HomeGuest.js mongoDB results from state.submitCount fetchResults useEffect was: ",response.data)
+                
+        //(L73) - instead of calling dispatch, we want to automatically log the new user in:
+                    //Call dispatch, case `usernameUniqueResults`, server responds either true/false. Give this to our redcuer.
+                    // dispatch({type: "usernameUniqueResults", value: response.data})
+            //Use app-wide or global state to log in new user. So import app-wide dispatch above
+                appDispatch({type: "login", data: response.data})  //response.data has username, avatar etc.
+            //Also show flash message: 
+                appDispatch({type: "flashMessage", value: "Congrats! Welcome to your new account (HomeGuest.js)" })
+            } catch(e) {
+                console.log("There was a problem in HomeGuest.js axios fetchResults state.submitCount useEffect() or the request was cancelled",e)
+            }
+        }
+        //call our async fn
+        fetchResults()
+        //clean up 
+        return () => ourRequest.cancel()
+        
+    }
+}, [state.submitCount])
+
+
 // L71 (10:50) Third useEffect to handle Email reducer case: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19153116#overview
     // useEffect(() =>{},[])
     useEffect(() => {
@@ -266,11 +317,13 @@ useEffect(() => {
 // L73 (0:30) Add in our rules from our dispatch: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19180030#overview
     //username
         dispatch({type: "usernameImmediately", value: state.username.value})
-        dispatch({type: "usernameAfterDelay", value: state.username.value})
+    //L73 (2:20) create variable 'noRequest: true' which we handle above in the 'usernameAfterDelay' and 'emailafterDelay' cases
+        dispatch({type: "usernameAfterDelay", value: state.username.value, noRequest: true})
     
     //email
         dispatch({type: "emailImmediately", value: state.email.value})
-        dispatch({type: "emailAfterDelay", value: state.email.value})        
+    //L73 (2:20) create variable 'noRequest: true' which we handle above in the 'usernameAfterDelay' and 'emailafterDelay' cases
+        dispatch({type: "emailAfterDelay", value: state.email.value, noRequest: true})        
 
     //password
         dispatch({type: "passwordImmediately", value: state.password.value})
