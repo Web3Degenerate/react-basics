@@ -48,9 +48,14 @@ function HeaderLoggedOut(props) {
             // setLoggedIn(false) //pull from useContext in L40
  //Replaced localStorage.setItem() in L44 useEffect and added to appDispatch: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview     
                 appDispatch({ type: "login", data: response.data })
+//L74 (0:45) - Add flash message for successful login: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19180258#overview
+                appDispatch({type: "flashMessage", value: "You have successfully logged in."})
 
             } else {
                 console.log("Incorrect username / password")
+//L74 (1:05) - Add flash message for FAILED login: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19180258#overview
+                appDispatch({type: "flashMessage", value: "Invalid username or password. Please try again."})
+
             }
 
         } catch(e){

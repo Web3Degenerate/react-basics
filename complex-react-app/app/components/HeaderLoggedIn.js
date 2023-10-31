@@ -27,6 +27,8 @@ function HeaderLoggedIn(props) {
     // L42 (10:26) change setLoggedIn(false) to appDispatch({type: "logout"}): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18405574#overview
             // setLoggedIn(false) //pull from useContext in L40
             appDispatch({ type: "logout" })
+    // L74 (1:50) Add flash message to confirm Logout
+            appDispatch({type: "flashMessage", value: "You have successfully logged out."})
 
             //Remove token, username and avatar from localStorage
             /* Removed in L44(9:30) - useEffect in Main.js: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18461928#overview
