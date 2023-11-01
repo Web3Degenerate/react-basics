@@ -124,6 +124,48 @@ function Main(){
     },[state.loggedIn])
 
 
+
+// L75 (2:30) - Set up new useEffect that will only run on the initial render. Proactively send axios request to server to check token
+    //Copy the axios request template from our Search.js component
+// (COPIED FROM SEARCH.js COMPONENT implemented at) L60 (12:55) - second useEffect that listens for changes to requestCount
+
+    //CHECK if token has expired or not on first render:
+useEffect(() => {
+    if (state.loggedIn){ //check if have a token
+        // Send axios request here in L75
+        const ourRequest = Axios.CancelToken.source()
+
+        async function fetchResults(){
+            try {
+                    //Added L61 (~3:40): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19049978#overview
+                //Edited L75 (4:10) Axios request: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19194992#overview
+                const response = await Axios.post("/checkToken", { token: state.state.user.token }, {cancelToken: ourRequest.token})
+                console.log("Search.js mongoDB results from fetchResults was: ",response.data)
+                //Server responds with true or false
+                    if (!response.data){ //only if server sent back FALSE. (token no longer valid)
+                        //log user out. Show flash message telling user to log in again
+                        dispatch({type: 'logout'})
+                        //Technically, our server is not using sessions, but phrase as such:
+                        dispatch({type: "flashmessage", value: "Your session has expired.  Please log in again."})
+                    }
+
+                // setState(draft => {
+                //     draft.results = response.data
+                //     draft.show = 'results'
+                // })
+
+            } catch(e) {
+                console.log("There was a problem in Main.js axios useEffect() proactively checking user token (L75)",e)
+            }
+        }
+        //call our async fn
+        fetchResults()
+        //clean up 
+        return () => ourRequest.cancel()
+        
+    }
+}, [state.requestCount])  
+
     return (
 
             <StateContext.Provider value={state}>

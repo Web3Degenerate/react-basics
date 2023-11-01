@@ -5,7 +5,11 @@ const Follow = require("../models/Follow")
 const jwt = require("jsonwebtoken")
 
 // how long a token lasts before expiring
-const tokenLasts = "365d"
+// Edited L75 (6:35): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19194992#overview
+// const tokenLasts = "365d" //never real world, here, last 1 year.
+// const tokenLasts = '30s' //For testing, token expires after 30 seconds in L75
+const tokenLasts = '1d' //For testing, token expires after 30 seconds in L75
+
 
 exports.apiGetPostsByUsername = async function (req, res) {
   try {

@@ -37,7 +37,7 @@ function HeaderLoggedIn(props) {
                 localStorage.removeItem("complexappAvatar")
             */
     }
-
+ 
     // L57 (8:01) onClick handler for search icon/Search overlay
     // const handleSearchIcon = () => {
     function handleSearchIcon(e) {
