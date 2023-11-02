@@ -1,4 +1,8 @@
-import React, {useState, useReducer, useEffect} from 'react'
+// import React, {useState, useReducer, useEffect} from 'react'
+
+//L76 (5:20) add Suspense for our lazy loading of CreatePost and other components.: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222666#overview
+import React, {useState, useReducer, useEffect, Suspense} from 'react'
+
 import ReactDOM from 'react-dom/client'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
@@ -15,7 +19,16 @@ import About from "./components/About"
 import Terms from "./components/Terms"
 
 import Home from './components/Home'
-import CreatePost from './components/CreatePost'
+
+//L76 (4:05) set up Lazy load for Create Post: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222666#overview
+    //import CreatePost from './components/CreatePost'
+    // Call the React built in method .lazy() and pass in a function. Use arrow statement () => {} but don't need brackets if just one line () => 
+        // use import() and pass the path to our file.
+    const CreatePost = React.lazy(() => import('./components/CreatePost'))
+        //NOW, when the app first loads, it will NOT contain the contents of the CreatePost.js component.
+        //Because this really just contains a promise.
+
+
 import ViewSinglePost from './components/ViewSinglePost'
 
 import FlashMessages from './components/FlashMessages'
@@ -41,6 +54,7 @@ import { CSSTransition } from 'react-transition-group'
 
 //Imported Chat.js component in L66 (2:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19096866#overview
 import Chat from "./components/Chat"
+import LoadingDotsIcon from './components/LoadingDotsIcon'
 
 function Main(){
 
@@ -178,18 +192,24 @@ useEffect(() => {
 
                 <Header />
 
-                <Routes>
+{/* L76 (5:40) wrap Lazy Loaded Components with the Suspense tag. Here, just wrap a Suspense around our entire overall Routes component */}
+        <Suspense fallback={<LoadingDotsIcon />}>
+                            <Routes>
 
-                    <Route path="/profile/:username/*" element={<Profile />} />
-                    <Route path="/" element={state.loggedIn ? <Home /> : <HomeGuest />} />
-                    <Route path="/about-us" element={<About />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/create-post" element={<CreatePost />} />
-                    <Route path="/post/:id" element={<ViewSinglePost />} />
-                    <Route path="/post/:id/edit" element={<EditPost />} />
-    {/* Catchall Global 404 Not Found via "*" route added in L55 (12:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview */}
-                    <Route path="*" element={<NotFound message="Main.js Routes, path='*' top level url that can't be found."/>} />
-                </Routes>
+                                <Route path="/profile/:username/*" element={<Profile />} />
+                                <Route path="/" element={state.loggedIn ? <Home /> : <HomeGuest />} />
+                                <Route path="/about-us" element={<About />} />
+                                <Route path="/terms" element={<Terms />} />
+
+
+                                    <Route path="/create-post" element={<CreatePost />} />
+
+                                <Route path="/post/:id" element={<ViewSinglePost />} />
+                                <Route path="/post/:id/edit" element={<EditPost />} />
+                {/* Catchall Global 404 Not Found via "*" route added in L55 (12:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview */}
+                                <Route path="*" element={<NotFound message="Main.js Routes, path='*' top level url that can't be found."/>} />
+                            </Routes>
+        </Suspense>
     {/* Add Search component L57 (1:35) outside of our Routes: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview */}
             {/* L57 (6:40) add conditional display of Search component with initialState and our reducer cases */}
                 {/* <Search /> */}
