@@ -28,8 +28,10 @@ import Home from './components/Home'
         //NOW, when the app first loads, it will NOT contain the contents of the CreatePost.js component.
         //Because this really just contains a promise.
 
+//L76 (8:55) set up Lazy loading for ViewSinglePost: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222666#overview
+        // import ViewSinglePost from './components/ViewSinglePost'
+        const ViewSinglePost = React.lazy(() => import('./components/ViewSinglePostPost'))
 
-import ViewSinglePost from './components/ViewSinglePost'
 
 import FlashMessages from './components/FlashMessages'
 
@@ -194,7 +196,8 @@ useEffect(() => {
 
 {/* L76 (5:40) wrap Lazy Loaded Components with the Suspense tag. Here, just wrap a Suspense around our entire overall Routes component */}
         <Suspense fallback={<LoadingDotsIcon />}>
-                            <Routes>
+
+                    <Routes>
 
                                 <Route path="/profile/:username/*" element={<Profile />} />
                                 <Route path="/" element={state.loggedIn ? <Home /> : <HomeGuest />} />
@@ -208,7 +211,8 @@ useEffect(() => {
                                 <Route path="/post/:id/edit" element={<EditPost />} />
                 {/* Catchall Global 404 Not Found via "*" route added in L55 (12:45): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview */}
                                 <Route path="*" element={<NotFound message="Main.js Routes, path='*' top level url that can't be found."/>} />
-                            </Routes>
+                    </Routes>
+
         </Suspense>
     {/* Add Search component L57 (1:35) outside of our Routes: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview */}
             {/* L57 (6:40) add conditional display of Search component with initialState and our reducer cases */}
