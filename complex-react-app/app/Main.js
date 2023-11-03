@@ -61,7 +61,12 @@ import NotFound from './components/NotFound'
 import { CSSTransition } from 'react-transition-group'
 
 //Imported Chat.js component in L66 (2:47): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19096866#overview
-import Chat from "./components/Chat"
+    // import Chat from "./components/Chat"
+
+// L77 - Added lazy loading for Chat component
+    const Chat = React.lazy(() => import('./components/Chat'))
+
+
 import LoadingDotsIcon from './components/LoadingDotsIcon'
 
 function Main(){
@@ -242,7 +247,12 @@ useEffect(() => {
                 </CSSTransition>
 
 {/* L66 (3:00) Added Chat component */}
-                    <Chat />
+                    {/* <Chat /> */}
+    {/* L77 set up lazy loading for Chat component for LOGGED in users only */}
+                        <Suspense fallback="">
+                            {state.loggedIn && <Chat /> }                     
+                        </Suspense>
+
                 <Footer />
 
             </BrowserRouter>
