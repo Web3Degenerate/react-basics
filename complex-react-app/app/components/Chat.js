@@ -58,6 +58,9 @@ function Chat() {
                 draft.chatMessages.push(message)
             })
         }) 
+
+        //Added clean up function in L77
+        return () => socket.disconnect()
     }, [])    
 
 
