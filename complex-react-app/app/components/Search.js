@@ -130,8 +130,10 @@ function Search() {
     }
 
   return (
-    
-    <div className="search-overlay">
+   
+<>
+    {/* Moved outter div.search-overlay to Main.js in L77 (2:25) for CSSTransition and Lazy Loading: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222670#overview */}
+    {/* <div className="search-overlay"> */}
         <div className="search-overlay-top shadow-sm">
                 <div className="container container--narrow">
                     <label htmlFor="live-search-field" className="search-overlay-icon">
@@ -194,8 +196,8 @@ function Search() {
 
         </div>
       </div>
-    </div>
-
+    {/* </div> */}
+</>
   )
 }
 

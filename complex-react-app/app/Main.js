@@ -30,7 +30,7 @@ import Home from './components/Home'
 
 //L76 (8:55) set up Lazy loading for ViewSinglePost: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222666#overview
         // import ViewSinglePost from './components/ViewSinglePost'
-        const ViewSinglePost = React.lazy(() => import('./components/ViewSinglePostPost'))
+        const ViewSinglePost = React.lazy(() => import('./components/ViewSinglePost'))
 
 
 import FlashMessages from './components/FlashMessages'
@@ -48,8 +48,14 @@ import EditPost from './components/EditPost'
 //Added global 404 not found component in L55 (12:15): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18797676#overview
 import NotFound from './components/NotFound'
 
+
 //Added Search Overlay in L57: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18996914#overview
-import Search from './components/Search'  
+    //About 4KB before being minimized.
+    // L77 (0:45) Lazy load Search Component: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222670#overview
+    // import Search from './components/Search'  
+    const Search = React.lazy(() => import('./components/Search'))
+
+
 
 //Import installed react-transition-group for CSS transitions in L58 (2:23): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19002510#overview
 import { CSSTransition } from 'react-transition-group'
@@ -220,7 +226,19 @@ useEffect(() => {
                 {/* {state.isSearchOpen ? <Search /> : ''} */}
             {/* L58 (3:48) replace Search with CSS Transitions: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19002510#overview */}
                 <CSSTransition timeout={330} in={state.isSearchOpen} classNames="search-overlay" unmountOnExit >
-                    <Search />
+
+    {/* L77 (4:20) Set up Search component for lazy loading: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222670#overview  */}
+                 
+                    {/* The CSSTransition will add CSS elements to it's DIRECT NEAREST child element */}
+                    {/* <Search /> */}
+
+                    <div className="search-overlay">
+                    {/* The CSSTransition will now add CSS elements to the div as it's DIRECT NEAREST child element */}
+                        <Suspense fallback="">
+                            <Search />
+                        </Suspense>
+                    </div>
+
                 </CSSTransition>
 
 {/* L66 (3:00) Added Chat component */}
