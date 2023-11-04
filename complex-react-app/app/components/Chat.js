@@ -12,15 +12,25 @@ import DispatchContext from '../DispatchContext'
 //L67 (0:50) import immer to use for setting the state of the chat input text field: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102908#overview
 import { useImmer } from "use-immer"
 
-// L68 (2:50) import socket.io-client: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102912#overview
-import io from 'socket.io-client'
-const socket = io("http://localhost:8080") //pass it url that points to our server. Establishes connection b/t browser & backend server
+
+
+
 
 // L69 (1:15) add Link to click on user in chat box and see their profile
 import { Link } from 'react-router-dom'
 
+    // L68 (2:50) import socket.io-client: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102912#overview
+    import io from 'socket.io-client'
+// L77 (6:50) Move socket to component: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222670#overview
+    // const socket = io("http://localhost:8080") //pass it url that points to our server. Establishes connection b/t browser & backend server
+
 
 function Chat() {
+
+// L77 (6:50) Move socket to component: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222670#overview
+// We are using `useRef` instead of useState b/c we don't want React to recreate socket variable (micro-manage it) 
+    //We just want a basic mutable object that is not going to change so the browser can hold on to the socket conection
+    const socket = useRef(null)
 
     const appState = useContext(StateContext)
     const appDispatch = useContext(DispatchContext)
@@ -53,14 +63,22 @@ function Chat() {
 
 //L68 (5:40) set up 2nd useEffect to listen for 'chatFromServer' event the first time chat component renders: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19102912#overview
     useEffect(() => {
-        socket.on("chatFromServer", message => { //brad programmed server to emit 'chatFromServer'
+    //L 77 (7:30) set up our socket variable connection, set to useRef(null) in this function: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222670#overview
+        // Now, no matter how many times you log OUT and back IN, we are ending the socket connection and reopening it at the appropriate times:
+        socket.current = io("http://locahost:8080")
+    //NOW call it as socket.current.on() 
+    // socket.on("chatFromServer", message => { //brad programmed server to emit 'chatFromServer'
+        socket.current.on("chatFromServer", message => { //brad programmed server to emit 'chatFromServer'
             setState(draft => {
                 draft.chatMessages.push(message)
             })
         }) 
 
-        //Added clean up function in L77
-        return () => socket.disconnect()
+        //Added clean up function in L77 (~6th minute): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222670#overview
+        // return () => socket.disconnect()
+        // NOW (L77 - 8th min) disconnect with `socket.current.disconnect()`
+        return () => socket.current.disconnect()
+
     }, [])    
 
 
@@ -93,8 +111,12 @@ function Chat() {
             // TWO WAY Communication: Open up a socket connection b/t browser and a server. 
             // instead of axios, use socket.io
         //L68 (4:10) name of event type 'chatFromBrowser'
-        socket.emit("chatFromBrowser", {message: state.fieldValue, token: appState.user.token}) //brad configured it to look for 'chatFromBrowser'
-                //server will broadcast message out to any other connected users. 
+            //server will broadcast message out to any other connected users. 
+    
+    // socket.emit("chatFromBrowser", {message: state.fieldValue, token: appState.user.token}) //brad configured it to look for 'chatFromBrowser'
+        
+    // L77 (8:15) - Call socket with socket.current.emit(): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19222670#overview
+        socket.current.emit("chatFromBrowser", {message: state.fieldValue, token: appState.user.token}) //brad configured it to look for 'chatFromBrowser'
 
         setState((draft) => {
             // L67 (6:30) (2) Add message to state collection array of messages
