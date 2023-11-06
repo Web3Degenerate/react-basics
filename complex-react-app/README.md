@@ -76,6 +76,27 @@ Spin up local environment with **npm run dev** in `/complex-react-app` and **npm
 
 - install with `npm i socket.io-client`
 
+12. Install Dependencies for our new `webpack.config.js` at [L79 (3:40)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19268420#overview)
+
+- New `webpack.config.js` from [project github](https://github.com/LearnWebCode/react-course/blob/master/02-webpack-end.txt)
+- npm install dotenv-webpack
+- npm install clean-webpack-plugin
+- npm install html-webpack-harddisk-plugin
+- npm html-webpack-plugin
+- npm fs-extra
+
+- install in one command `npm install dotenv-webpack clean-webpack-plugin html-harddisk-plugin html-webpack-plugin fs-extra`
+
+- Packages in our new webpack:
+
+```js
+const Dotenv = require("dotenv-webpack")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const fse = require("fs-extra")
+```
+
 ## VS Code Snippet
 
 1. Open the **command palette** with `CTRL + SHIFT + P`
