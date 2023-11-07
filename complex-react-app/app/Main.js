@@ -9,7 +9,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 //L37 at (9:45) set up baseURL and import axios: https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/18268562#overview
 import Axios from 'axios'
-Axios.defaults.baseURL = 'http://localhost:8080'
+//L79 updated axios baseURL (7:00): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19268420#overview
+// Axios.defaults.baseURL = 'http://localhost:8080'
+Axios.defaults.baseURL = process.env.BACKENDURL || ''
 
 import Header from "./components/Header"
 import HomeGuest from "./components/HomeGuest"
