@@ -1,5 +1,7 @@
-// Added new webpack.config.js in L79 (3:30): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19268420#overview
-  // Source: https://raw.githubusercontent.com/LearnWebCode/react-course/master/02-webpack-end.txt
+/*  
+    Added new webpack.config.js in L79 (3:30): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19268420#overview
+    Source: https://raw.githubusercontent.com/LearnWebCode/react-course/master/02-webpack-end.txt
+  */
 
   const currentTask = process.env.npm_lifecycle_event
   const path = require("path")
@@ -88,7 +90,7 @@
   
   module.exports = config
 
-
+/*
 // Replaced original webpack.config.js replaced in L79 (3:30): https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19268420#overview
 // const path = require("path")
 
@@ -125,3 +127,5 @@
 //     ]
 //   }
 // }
+
+*/

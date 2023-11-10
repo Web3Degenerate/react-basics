@@ -2,6 +2,8 @@
 
 Spin up local environment with **npm run dev** in `/complex-react-app` and **npm run start** in `/backend-api`
 
+_(ran into error 11/9/23. Started up **backend-api** with `npm start`)_
+
 1. Set up package.json
 
    - `npm init -y`
@@ -96,6 +98,34 @@ const HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const fse = require("fs-extra")
 ```
+
+13. Install **express** in [L79 (12:20)](https://www.udemy.com/course/react-for-the-rest-of-us/learn/lecture/19268420#overview)
+
+- `npm install express`
+- _Install so we can run our new `previewDist.js` file_
+
+13. B - We updated the package.json scripts
+
+```js
+//Original
+  "scripts": {
+    "dev": "webpack serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  //Updated and changed **dev: webpack-dev-serve**
+    "scripts": {
+    "dev": "webpack-dev-server",
+    "webpackBuild": "webpack",
+    "previewDist": "node previewDist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+```
+
+---
+
+---
 
 ## VS Code Snippet
 

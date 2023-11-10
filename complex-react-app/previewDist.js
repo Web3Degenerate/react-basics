@@ -1,5 +1,7 @@
-//Created L79 (11:40): 
-// source: https://github.com/LearnWebCode/react-course/blob/master/previewDist.js
+/*
+Created L79 (11:40): 
+source: https://github.com/LearnWebCode/react-course/blob/master/previewDist.js
+*/
 
 const express = require("express")
 const path = require("path")
